@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent FAQ Document — Sarah Fadul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f5ff;--surface:#ffffff;--surface2:#eef2fc;--border:rgba(37,99,235,0.10);--accent:#2563eb;--accent2:#60a5fa;--text:#0f172a;--text2:#475569;--text3:#94a3b8;--mono:"IBM Plex Mono",monospace;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);padding:0 0 80px;}
+.hero{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 60%);border-bottom:1px solid var(--border);padding:56px 40px 48px;text-align:center;}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin:0 0 14px;}
+.hero-title{font-family:"Cormorant Garamond",serif;font-size:42px;font-weight:700;margin:0 0 14px;background:linear-gradient(135deg,#0f172a 40%,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:15px;color:var(--text2);max-width:52ch;margin:0 auto;line-height:1.65;}
+.wrap{max-width:760px;margin:0 auto;padding:48px 32px 0;}
+.intro-box{background:rgba(37,99,235,0.07);border:1px solid var(--accent);border-radius:16px;padding:24px 28px;margin-bottom:40px;}
+.intro-box h2{font-family:"Cormorant Garamond",serif;font-size:22px;margin:0 0 10px;color:var(--accent2);}
+.intro-box p{font-size:14px;color:var(--text2);line-height:1.7;margin:0;}
+.section-head{display:flex;align-items:center;gap:12px;margin:40px 0 20px;}
+.section-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0d0d0f;flex-shrink:0;}
+.section-title{font-family:"Cormorant Garamond",serif;font-size:24px;font-weight:600;color:var(--text);}
+.faq-card{background:#f8faff;border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:12px;}
+.faq-q-label{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.faq-q-example{font-size:13px;color:var(--text2);margin-bottom:12px;font-style:italic;line-height:1.55;}
+.faq-input-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px;display:block;}
+textarea,input[type=text]{width:100%;background:#f8faff;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);font-family:"DM Sans",sans-serif;outline:none;resize:vertical;line-height:1.5;transition:border-color 0.2s,box-shadow 0.2s;margin-bottom:0;}
+textarea:focus,input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.15);}
+textarea::placeholder,input[type=text]::placeholder{color:var(--text3);}
+.add-row{border:1px dashed rgba(255,255,255,0.15);background:none;border-radius:10px;padding:10px;width:100%;font-size:13px;color:var(--text2);cursor:pointer;text-align:center;margin-top:8px;transition:all 0.2s;}
+.add-row:hover{border-color:var(--accent);color:var(--accent);}
+.submit-section{margin-top:48px;text-align:center;border-top:1px solid var(--border);padding-top:40px;}
+.submit-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0d0d0f;border:none;border-radius:12px;padding:15px 40px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:0.02em;transition:all 0.2s;}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(37,99,235,0.3);}
+.export-btn{background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:15px 30px;font-size:14px;font-weight:600;color:var(--text2);cursor:pointer;margin-left:12px;transition:all 0.2s;}
+.export-btn:hover{border-color:var(--accent);color:var(--text);}
+.progress-wrap{background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:36px;display:flex;align-items:center;gap:16px;}
+.progress-bar-track{flex:1;height:6px;background:#dbeafe;border-radius:3px;}
+.progress-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.3s;}
+.progress-label{font-family:var(--mono);font-size:11px;color:var(--text2);white-space:nowrap;}
+@media(max-width:600px){.wrap{padding:32px 20px 0;}.hero{padding:40px 24px 36px;}.hero-title{font-size:30px;}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <p class="hero-eyebrow">For your AI Website Assistant</p>
+  <h1 class="hero-title">FAQ Document</h1>
+  <p class="hero-sub">This document trains your website’s AI assistant to answer visitors exactly the way you would. Fill in as many answers as possible — the more detail, the better.</p>
+</div>
+
+<div class="wrap">
+  <div class="intro-box">
+    <h2>&#129302; How this works</h2>
+    <p>Once you complete this document, your answers will feed into your website’s AI chat assistant. When a visitor asks a question, the AI will respond in your voice, based on what you write here. You don’t need to be perfect — just natural and honest. Write as if you’re talking to a potential client.</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="pFill" style="width:0%"></div></div>
+    <span class="progress-label" id="pLabel">0 / 0 answered</span>
+  </div>
+
+  <form id="faqForm">
+
+    <div class="section-head"><div class="section-num">1</div><div class="section-title">About You &amp; Your Work</div></div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;Who are you and what do you do?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="3" placeholder="e.g. I’m Sarah Fadul, a content strategist who helps personal brands build a powerful online presence through compelling storytelling..."></textarea>
+    </div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;What makes you different from others in your field?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="3" placeholder="e.g. Unlike most, I combine deep brand strategy with hands-on writing — you get the thinking AND the words..."></textarea>
+    </div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;What is your background and experience?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="3" placeholder="e.g. I have 8+ years in content strategy, have worked with brands across the Middle East and beyond..."></textarea>
+    </div>
+
+    <div class="section-head"><div class="section-num">2</div><div class="section-title">Your Services &amp; Offers</div></div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;What services do you offer?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="4" placeholder="List each service. e.g.&#10;1. Brand Voice Sessions&#10;2. Content Strategy Packages&#10;3. Done-for-you Blog Writing&#10;4. 1:1 Coaching"></textarea>
+    </div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;How much do your services cost?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="3" placeholder="e.g. Pricing varies by scope. My packages start from $X. I recommend a free discovery call to find what fits best."></textarea>
+    </div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;Do you work in Arabic, English, or both?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="2" placeholder="e.g. I work fully in both Arabic and English, and can deliver bilingual content."></textarea>
+    </div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;Do you work with beginners or only established brands?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="2" placeholder="e.g. I work with both! Whether you’re just starting out or ready to scale, I tailor my approach to meet you where you are."></textarea>
+    </div>
+
+    <div class="section-head"><div class="section-num">3</div><div class="section-title">Working Together</div></div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;How do we get started?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="3" placeholder="e.g. The first step is booking a free 30-minute discovery call. From there I’ll send over a proposal."></textarea>
+    </div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;How long does a project typically take?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="3" placeholder="e.g. It depends on the project. A single session takes 2 hours, while a full strategy takes 2–4 weeks."></textarea>
+    </div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;Do you offer refunds?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="2" placeholder="e.g. I offer a satisfaction revision period. If you’re unhappy, we work through it together first."></textarea>
+    </div>
+
+    <div class="section-head"><div class="section-num">4</div><div class="section-title">Results &amp; Social Proof</div></div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;Can you show me examples of your work?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="3" placeholder="e.g. Absolutely! You can see my portfolio at [link] or I can send specific examples on a call."></textarea>
+    </div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;What results have your past clients seen?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="3" placeholder="e.g. One client grew their newsletter from 200 to 2,000 subscribers in 3 months after we revamped their content strategy..."></textarea>
+    </div>
+
+    <div class="section-head"><div class="section-num">5</div><div class="section-title">Contact &amp; Availability</div></div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;Are you currently taking on new clients?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="2" placeholder="e.g. Yes! I currently have [X] spots open this month. I recommend reaching out early to secure your spot."></textarea>
+    </div>
+
+    <div class="faq-card" data-faq>
+      <div class="faq-q-label">Question visitors ask</div>
+      <div class="faq-q-example">&ldquo;How can I contact you?&rdquo;</div>
+      <label class="faq-input-label">Your answer</label>
+      <textarea rows="2" placeholder="e.g. You can book a call here [link], or email me at hello@sarahfadul.com. I respond within 24 hours."></textarea>
+    </div>
+
+    <div class="section-head"><div class="section-num">6</div><div class="section-title">Your Own Frequently Asked Questions</div></div>
+    <p style="font-size:13px;color:var(--text2);margin:0 0 16px;line-height:1.65;">Add any questions you personally get asked all the time — from DMs, emails, discovery calls, or in-person.</p>
+    <div id="customFaqs"></div>
+    <button type="button" class="add-row" id="addFaqBtn">&#10010; Add a question I frequently get asked</button>
+
+    <div class="submit-section">
+      <p style="font-size:13px;color:var(--text2);margin:0 0 24px;">&#128190; Your answers auto-save in your browser. Export when ready.</p>
+      <button type="button" class="submit-btn" id="exportBtn">&#128206; Export as Text File</button>
+      <button type="button" class="export-btn" id="copyBtn">&#128203; Copy to Clipboard</button>
+    </div>
+
+  </form>
+</div>
+
+<script>
+function updateProgress(){
+  var all=document.querySelectorAll('[data-faq] textarea,[data-faq] input[type=text]');
+  var filled=0;all.forEach(function(el){if(el.value.trim().length>0)filled++;});
+  var pct=all.length?Math.round((filled/all.length)*100):0;
+  document.getElementById('pFill').style.width=pct+'%';
+  document.getElementById('pLabel').textContent=filled+' / '+all.length+' answered';
+  var data={};all.forEach(function(el,i){data['f'+i]=el.value;});
+  try{localStorage.setItem('faq_sf2',JSON.stringify(data));}catch(e){}
+}
+function loadSaved(){
+  try{var s=localStorage.getItem('faq_sf2');if(!s)return;var d=JSON.parse(s);var all=document.querySelectorAll('[data-faq] textarea,[data-faq] input[type=text]');all.forEach(function(el,i){if(d['f'+i])el.value=d['f'+i];});}catch(e){}
+}
+document.addEventListener('input',updateProgress);
+var cc=0;
+document.getElementById('addFaqBtn').onclick=function(){
+  cc++;var div=document.createElement('div');div.className='faq-card';div.setAttribute('data-faq','');
+  div.innerHTML='<div class="faq-q-label">Your question #'+cc+'</div><label class="faq-input-label">The question</label><input type="text" placeholder="e.g. Do you offer monthly retainers?" style="margin-bottom:10px;"><label class="faq-input-label">Your answer</label><textarea rows="3" placeholder="Your answer…"></textarea>';
+  document.getElementById('customFaqs').appendChild(div);
+  div.addEventListener('input',updateProgress);updateProgress();
+};
+function buildText(){
+  var out='SARAH FADUL — AI AGENT FAQ DOCUMENT
+'+'='.repeat(50)+'
+
+';
+  document.querySelectorAll('.faq-card').forEach(function(card){
+    var q=card.querySelector('.faq-q-example, input[type=text]');
+    var a=card.querySelector('textarea');
+    if(q&&a&&a.value.trim()){out+='Q: '+(q.tagName==='INPUT'?q.value:q.textContent.trim())+'
+A: '+a.value.trim()+'
+
+';}
+  });
+  return out;
+}
+document.getElementById('exportBtn').onclick=function(){
+  var blob=new Blob([buildText()],{type:'text/plain;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sarah-fadul-faq.txt';a.click();
+};
+document.getElementById('copyBtn').onclick=function(){
+  navigator.clipboard.writeText(buildText()).then(function(){
+    var btn=document.getElementById('copyBtn');btn.textContent='✓ Copied!';
+    setTimeout(function(){btn.textContent='&#128203; Copy to Clipboard';},2000);
+  });
+};
+loadSaved();updateProgress();
+</script>
+</body>
+</html>

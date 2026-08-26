@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visual Onboarding Brief — Sarah Fadul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600;700&family=Lato:wght@300;400;700&family=Cairo:wght@300;400;600;700&family=Tajawal:wght@300;400;500;700&family=Almarai:wght@300;400;700;800&family=Noto+Kufi+Arabic:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css">
+<style>
+:root {
+  --bg:#f0f5ff; --bg3:#e2eaf8; --surface:#ffffff; --surface2:#eef2fc;
+  --border:rgba(37,99,235,0.10); --border-active:rgba(37,99,235,0.38);
+  --accent:#2563eb; --accent2:#60a5fa;
+  --text:#0f172a; --text2:#475569; --text3:#94a3b8;
+  --love:#e05f7a; --avoid:#e07a5f;
+  --mono:'IBM Plex Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;} html{scroll-behavior:smooth;}
+body{margin:0;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+button{cursor:pointer;} input,textarea,button{font-family:inherit;}
+.bg-orb{position:fixed;pointer-events:none;border-radius:50%;filter:blur(80px);opacity:0.12;z-index:0;}
+.bg-orb-1{width:500px;height:500px;background:#3b82f6;top:-100px;left:-150px;}
+.bg-orb-2{width:400px;height:400px;background:#1d4ed8;bottom:-100px;right:-100px;}
+.bg-orb-3{width:300px;height:300px;background:#7dd3fc;top:50%;left:50%;transform:translate(-50%,-50%);}
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.5s cubic-bezier(0.4,0,0.2,1);z-index:100;border-radius:0 2px 2px 0;}
+.site-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:rgba(240,245,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:0.02em;color:var(--text);}
+.logo span{color:var(--accent);}
+.step-pills{display:flex;gap:6px;}
+.step-pill{width:28px;height:6px;border-radius:3px;background:var(--surface2);transition:background 0.3s,width 0.3s;}
+.step-pill.done{background:var(--accent);} .step-pill.active{background:var(--accent2);width:42px;}
+.app-wrap{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:110px 24px 100px;}
+.step-card{width:100%;max-width:780px;background:rgba(255,255,255,0.95);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:24px;box-shadow:0 4px 40px rgba(37,99,235,0.08);padding:52px 56px;position:relative;overflow:hidden;animation:fadeUp 0.45s cubic-bezier(0.4,0,0.2,1) both;}
+.step-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(37,99,235,0.04) 0%,transparent 60%);pointer-events:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.step-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin:0 0 10px;}
+.step-title{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:600;line-height:1.12;margin:0 0 12px;color:var(--text);letter-spacing:-0.01em;}
+.step-desc{font-size:15px;color:var(--text2);line-height:1.65;margin:0 0 36px;max-width:56ch;}
+.section-divider{height:1px;background:var(--border);margin:32px 0;}
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin:0 0 16px;display:block;}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin:0 0 8px;}
+.field-optional{font-size:11px;color:var(--text3);font-family:var(--mono);font-weight:400;margin-left:6px;}
+input[type=text],textarea{width:100%;background:#f8faff;border:1px solid var(--border);border-radius:8px;padding:11px 16px;font-size:14px;color:var(--text);line-height:1.5;transition:border-color 0.2s,box-shadow 0.2s;outline:none;resize:vertical;}
+input[type=text]:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.18);}
+input[type=text]::placeholder,textarea::placeholder{color:var(--text3);}
+textarea{min-height:90px;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;}
+.chip{border:1px solid var(--border-active);background:#eef2fc;border-radius:999px;padding:7px 18px;font-size:13px;color:var(--text2);transition:all 0.18s ease;}
+.chip:hover{border-color:var(--accent);color:var(--text);}
+.chip.selected{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#0d0d0f;font-weight:600;}
+/* Palette */
+.palette-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;margin-bottom:20px;}
+.palette-slot{background:#f8faff;border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;}
+.palette-slot-label{font-size:12px;font-weight:500;color:var(--text2);}
+.color-preview-row{display:flex;gap:8px;align-items:center;}
+.color-swatch{width:40px;height:40px;border-radius:8px;border:2px solid rgba(255,255,255,0.12);cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;flex-shrink:0;}
+.color-swatch:hover{transform:scale(1.08);box-shadow:0 0 0 3px rgba(37,99,235,0.4);}
+.color-hex-input{flex:1;font-family:var(--mono);font-size:13px;background:#f8faff;border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);min-width:0;width:auto;}
+.saved-palettes{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;min-height:32px;}
+.saved-palette{display:flex;gap:4px;padding:6px 10px;background:#eef2fc;border-radius:8px;border:1px solid var(--border);align-items:center;}
+.swatch-mini{width:16px;height:16px;border-radius:4px;}
+.label-mini{font-size:11px;color:var(--text2);margin-left:6px;}
+.save-palette-btn{border:1px dashed var(--border-active);background:none;border-radius:8px;padding:9px 18px;font-size:13px;color:var(--text2);transition:all 0.18s;cursor:pointer;margin-top:10px;}
+.save-palette-btn:hover{border-color:var(--accent);color:var(--accent);}
+/* Fonts */
+.font-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+@media(max-width:560px){.font-grid{grid-template-columns:1fr;}}
+.font-card{background:#f8faff;border:1.5px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;gap:8px;text-align:left;}
+.font-card:hover{border-color:rgba(37,99,235,0.5);background:var(--surface2);}
+.font-card.selected{border-color:var(--accent);background:rgba(37,99,235,0.06);box-shadow:0 0 0 1px var(--accent);}
+.fc-name{font-size:11px;font-weight:600;color:var(--accent);font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;}
+.fc-sample{font-size:26px;color:var(--text);line-height:1.2;}
+.fc-sample-ar{font-size:24px;color:var(--text);line-height:1.4;text-align:right;direction:rtl;}
+.fc-desc{font-size:11px;color:var(--text3);line-height:1.5;}
+.fc-tag{display:inline-block;background:#dbeafe;border-radius:4px;padding:2px 7px;font-size:10px;color:var(--text3);font-family:var(--mono);}
+/* Style */
+.style-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:24px;}
+.style-card{background:#ffffff;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all 0.2s;}
+.style-card:hover{border-color:rgba(37,99,235,0.5);transform:translateY(-2px);}
+.style-card.selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 4px 20px rgba(37,99,235,0.18);}
+.sc-visual{height:90px;display:flex;align-items:center;justify-content:center;font-size:26px;letter-spacing:-2px;}
+.sc-vis-elegant{background:linear-gradient(135deg,#1a1208,#2d1e0a,#3b2710);}
+.sc-vis-bold{background:linear-gradient(135deg,#0a0a0a,#111,#1a0000);}
+.sc-vis-soft{background:linear-gradient(135deg,#f5f0eb,#ede4d9,#ddd0c1);}
+.sc-vis-minimal{background:linear-gradient(135deg,#f9f9f9,#efefef,#e5e5e5);}
+.sc-vis-playful{background:linear-gradient(135deg,#ff9a9e,#fecfef,#a18cd1);}
+.sc-vis-corporate{background:linear-gradient(135deg,#0f2040,#1a3060,#243070);}
+.sc-vis-earthy{background:linear-gradient(135deg,#3d2b1f,#5c3d2e,#7a5040);}
+.sc-vis-luxe{background:linear-gradient(135deg,#1c1208,#2d1e08,rgba(37,99,235,0.27));}
+.sc-body{padding:12px;}
+.sc-title{font-size:13px;font-weight:600;color:#0f172a;}
+.sc-desc{font-size:11px;color:#64748b;margin-top:3px;line-height:1.4;}
+/* Slider */
+.slider-wrap{margin-bottom:24px;}
+.range-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:6px;}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:#dbeafe;outline:none;margin:0;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg);box-shadow:0 2px 8px rgba(37,99,235,0.4);}
+/* Gallery */
+.gallery-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px;}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;margin-bottom:28px;}
+.img-card{background:#ffffff;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color 0.2s,transform 0.2s;}
+.img-card:hover{transform:translateY(-2px);}
+.img-card.label-love{border-color:var(--love);box-shadow:0 0 0 1px var(--love),0 4px 20px rgba(224,95,122,0.2);}
+.img-card.label-avoid{border-color:var(--avoid);box-shadow:0 0 0 1px var(--avoid),0 4px 20px rgba(224,122,95,0.2);}
+.img-card.label-inspire{border-color:#2563eb;box-shadow:0 0 0 1px #2563eb,0 4px 20px rgba(37,99,235,0.2);}
+.img-card.label-meh{border-color:var(--text3);}
+.img-placeholder{width:100%;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-size:12px;font-family:var(--mono);text-align:center;padding:16px;min-height:155px;position:relative;}
+.img-ph-dark{background:linear-gradient(135deg,#0d0d0f 0%,#1a1a2e 100%);color:#6a6460;}
+.img-ph-dark2{background:linear-gradient(135deg,#12100e 0%,#3a1e14 100%);color:#6a6460;}
+.img-ph-light{background:linear-gradient(135deg,#f0ece4 0%,#ddd8d0 100%);color:#a09a90;}
+.img-ph-light2{background:linear-gradient(135deg,#faf6f0 0%,#e8ddd0 100%);color:#a09a90;}
+.img-ph-bold{background:linear-gradient(135deg,#1a0000 0%,#3a0010 100%);color:#6a6460;}
+.img-ph-bold2{background:linear-gradient(135deg,#0a0010 0%,#1e003a 100%);color:#6a6460;}
+.img-ph-nature{background:linear-gradient(135deg,#0f1a0f 0%,#1a3020 100%);color:#6a6460;}
+.img-ph-nature2{background:linear-gradient(135deg,#1a1208 0%,#3a2e1a 100%);color:#6a6460;}
+.ph-icon{font-size:30px;opacity:0.6;}
+.ph-label{font-size:10px;opacity:0.6;letter-spacing:0.06em;text-transform:uppercase;line-height:1.6;}
+.ph-num{font-size:9px;opacity:0.35;position:absolute;top:8px;left:10px;font-family:var(--mono);}
+.img-card-body{padding:12px 14px 14px;}
+.img-card-site-label{font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px;}
+.img-card-style-tag{display:inline-block;font-size:10px;color:var(--text3);background:#e2eaf8;border-radius:4px;padding:2px 7px;font-family:var(--mono);margin-bottom:8px;}
+.img-label-row{display:flex;gap:5px;margin-bottom:8px;}
+.img-label-btn{flex:1;border:1px solid var(--border-active);background:#f0f5ff;border-radius:6px;padding:5px 2px;font-size:10px;color:var(--text2);transition:all 0.15s;text-align:center;}
+.img-label-btn:hover{border-color:var(--accent);color:var(--text);}
+.img-label-btn.active-love{background:var(--love);border-color:var(--love);color:#fff;}
+.img-label-btn.active-avoid{background:var(--avoid);border-color:var(--avoid);color:#fff;}
+.img-label-btn.active-inspire{background:#5b8df5;border-color:#5b8df5;color:#fff;}
+.img-label-btn.active-meh{background:#e2eaf8;border-color:var(--text3);color:var(--text2);}
+.img-comment{width:100%;font-size:12px;background:#f0f5ff;border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);resize:none;min-height:50px;outline:none;}
+.img-comment:focus{border-color:var(--accent);}
+.img-comment::placeholder{color:var(--text3);}
+/* Nav */
+.nav-buttons{width:100%;max-width:780px;display:flex;justify-content:space-between;align-items:center;margin-top:24px;}
+.btn{font-size:14px;font-weight:600;padding:13px 30px;border-radius:10px;border:none;transition:all 0.2s;letter-spacing:0.02em;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0d0d0f;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(37,99,235,0.3);}
+.btn-ghost{background:#eef2fc;border:1px solid var(--border-active);color:var(--text2);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--text);}
+.btn-skip{background:none;border:none;color:var(--text3);font-size:13px;padding:13px 10px;text-decoration:underline;text-decoration-color:transparent;transition:color 0.2s,text-decoration-color 0.2s;}
+.btn-skip:hover{color:var(--text2);text-decoration-color:var(--text3);}
+/* Thank you */
+.thankyou-wrap{text-align:center;padding:16px 0 40px;}
+.ty-icon{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 28px;animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;}
+@keyframes popIn{from{opacity:0;transform:scale(0.4);}to{opacity:1;transform:scale(1);}}
+.ty-title{font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:700;margin:0 0 16px;background:linear-gradient(135deg,#0f172a 40%,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ty-subtitle{font-size:16px;color:var(--text2);max-width:48ch;margin:0 auto 36px;line-height:1.65;}
+.reminder-cards{display:flex;flex-direction:column;gap:14px;max-width:500px;margin:0 auto;}
+.reminder-card{background:#f8faff;border:1px solid var(--border);border-radius:14px;padding:20px 24px;text-align:left;display:flex;gap:16px;align-items:flex-start;}
+.reminder-card.highlight{border-color:var(--accent);background:rgba(37,99,235,0.06);}
+.rc-icon{font-size:24px;flex-shrink:0;margin-top:2px;}
+.rc-title{font-weight:600;font-size:15px;color:var(--text);margin-bottom:4px;}
+.rc-desc{font-size:13px;color:var(--text2);line-height:1.55;}
+/* Misc */
+.step-badge{display:inline-flex;align-items:center;gap:8px;background:#eef2fc;border:1px solid var(--border);border-radius:999px;padding:5px 14px;font-size:12px;color:var(--text2);font-family:var(--mono);margin-bottom:20px;}
+.step-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+@media(max-width:640px){.step-card{padding:32px 24px;}.step-title{font-size:28px;}.site-header{padding:14px 20px;}.gallery-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:440px){.gallery-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
+<div id="progress-bar" style="width:0%"></div>
+<header class="site-header">
+  <div class="logo">Sarah <span>Fadul</span> &mdash; Website Brief</div>
+  <div class="step-pills" id="stepPills"></div>
+</header>
+<div class="app-wrap">
+  <div class="step-card" id="stepCard">
+    <div id="stepContent"></div>
+  </div>
+  <div class="nav-buttons" id="navButtons"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.es5.min.js"></script>
+<script>
+// ============================================================
+// STATE
+// ============================================================
+var state={
+  colors:[{role:'Primary',hex:'#b4883e',note:''},{role:'Secondary',hex:'#0d0d0f',note:''},{role:'Accent',hex:'#e2c07a',note:''},{role:'Background',hex:'#f5f0eb',note:''}],
+  savedPalettes:[],enFont:null,arFont:null,styles:[],formalityLevel:50,
+  imgLabels:{},websiteGoal:'',targetAudience:'',competitorUrls:'',uniqueValue:'',
+  avoidNotes:'',musthaves:'',finalNotes:''
+};
+var TOTAL=7,cur=0,pickrs=[];
+
+var EN_FONTS=[
+  {id:'cormorant',name:'Cormorant Garamond',tag:'Elegant / Serif',desc:'Timeless editorial feel. Great for high-end personal brands.',sample:'Aa Bb Cc'},
+  {id:'playfair',name:'Playfair Display',tag:'Classic / Serif',desc:'Strong, authoritative. Perfect for coaches and speakers.',sample:'Aa Bb Cc'},
+  {id:'dm-sans',name:'DM Sans',tag:'Modern / Sans',desc:'Clean and approachable. Works for any professional site.',sample:'Aa Bb Cc'},
+  {id:'montserrat',name:'Montserrat',tag:'Bold / Sans',desc:'Confident and stylish. Excellent for headings.',sample:'Aa Bb Cc'},
+  {id:'lato',name:'Lato',tag:'Friendly / Sans',desc:'Warm and readable. Ideal for content-heavy sites.',sample:'Aa Bb Cc'}
+];
+var AR_FONTS=[
+  {id:'cairo',name:'Cairo',tag:'Modern / Arabic',desc:'Clean and versatile — the most web-friendly Arabic font.',sample:'\u0623 \u0628 \u062C \u2014 \u0645\u0631\u062D\u0628\u0627\u064B'},
+  {id:'tajawal',name:'Tajawal',tag:'Light / Arabic',desc:'Elegant and airy, great for bilingual sites.',sample:'\u0623 \u0628 \u062C \u2014 \u0645\u0631\u062D\u0628\u0627\u064B'},
+  {id:'almarai',name:'Almarai',tag:'Rounded / Arabic',desc:'Bold and friendly, modern brand feel.',sample:'\u0623 \u0628 \u062C \u2014 \u0645\u0631\u062D\u0628\u0627\u064B'},
+  {id:'noto-kufi',name:'Noto Kufi Arabic',tag:'Classic / Arabic',desc:'Traditional Kufi style with great legibility.',sample:'\u0623 \u0628 \u062C \u2014 \u0645\u0631\u062D\u0628\u0627\u064B'}
+];
+var ENF={'cormorant':"'Cormorant Garamond',serif",'playfair':"'Playfair Display',serif",'dm-sans':"'DM Sans',sans-serif",'montserrat':"'Montserrat',sans-serif",'lato':"'Lato',sans-serif"};
+var ARF={'cairo':"'Cairo',sans-serif",'tajawal':"'Tajawal',sans-serif",'almarai':"'Almarai',sans-serif",'noto-kufi':"'Noto Kufi Arabic',sans-serif"};
+var STYLES=[
+  {id:'elegant',label:'Elegant',desc:'Refined, upscale, editorial',vis:'sc-vis-elegant',icon:'\u2726 \u2726 \u2726'},
+  {id:'bold',label:'Bold',desc:'Strong, high contrast',vis:'sc-vis-bold',icon:'\u25fc \u25fc \u25fc'},
+  {id:'soft',label:'Soft & Warm',desc:'Warm tones, organic shapes',vis:'sc-vis-soft',icon:'\u25cc \u25cc \u25cc'},
+  {id:'minimal',label:'Minimal',desc:'White space, clean lines',vis:'sc-vis-minimal',icon:'\u2014 \u2014 \u2014'},
+  {id:'playful',label:'Playful',desc:'Colourful, expressive',vis:'sc-vis-playful',icon:'\u2605 \u2605 \u2605'},
+  {id:'corporate',label:'Corporate',desc:'Professional, structured',vis:'sc-vis-corporate',icon:'\u25aa \u25aa \u25aa'},
+  {id:'earthy',label:'Earthy',desc:'Natural, grounded, artisan',vis:'sc-vis-earthy',icon:'\u25c9 \u25c9 \u25c9'},
+  {id:'luxe',label:'Luxurious',desc:'Gold accents, dark canvas',vis:'sc-vis-luxe',icon:'\u25c8 \u25c8 \u25c8'}
+];
+// 8 example image placeholders in 4 style groups (2 per group)
+var IMGS=[
+  {id:'A1',grp:'Dark Luxury',style:'Elegant \u00b7 Dark \u00b7 Editorial',ph:'img-ph-dark',icon:'\ud83c\udfa8',lbl:'EXAMPLE 1\nDark Luxury Portfolio'},
+  {id:'A2',grp:'Dark Luxury',style:'Minimalist \u00b7 Black \u00b7 Serif',ph:'img-ph-dark2',icon:'\ud83d\uddbc',lbl:'EXAMPLE 2\nMinimalist Dark Blog'},
+  {id:'B1',grp:'Light & Soft',style:'Cream \u00b7 Warm \u00b7 Editorial',ph:'img-ph-light',icon:'\u2726',lbl:'EXAMPLE 3\nLight Editorial Brand'},
+  {id:'B2',grp:'Light & Soft',style:'Clean \u00b7 Airy \u00b7 Modern',ph:'img-ph-light2',icon:'\u25cc',lbl:'EXAMPLE 4\nClean Modern Portfolio'},
+  {id:'C1',grp:'Bold & Graphic',style:'Bold \u00b7 Saturated \u00b7 Impact',ph:'img-ph-bold',icon:'\u25fc',lbl:'EXAMPLE 5\nBold Graphic Style'},
+  {id:'C2',grp:'Bold & Graphic',style:'Colourful \u00b7 Energetic',ph:'img-ph-bold2',icon:'\u2605',lbl:'EXAMPLE 6\nBold Colourful Hero'},
+  {id:'D1',grp:'Earthy & Natural',style:'Green \u00b7 Organic \u00b7 Soft',ph:'img-ph-nature',icon:'\ud83c\udf3f',lbl:'EXAMPLE 7\nNatural Earthy Vibe'},
+  {id:'D2',grp:'Earthy & Natural',style:'Warm \u00b7 Textured \u00b7 Artisan',ph:'img-ph-nature2',icon:'\u25c9',lbl:'EXAMPLE 8\nArtisan Warm Texture'}
+];
+var PRESETS=[
+  {name:'Gold & Dark',c:['#b4883e','#0d0d0f','#e2c07a','#1a1208']},
+  {name:'Dusty Rose',c:['#d4a0a0','#2d1e1e','#e8c4c4','#f5f0f0']},
+  {name:'Deep Blue',c:['#1a3060','#f5f0f0','#5b8df5','#0a0a20']},
+  {name:'Sage Green',c:['#6b8f71','#f0ece4','#a3c2a0','#2d3d2f']},
+  {name:'Crisp Mono',c:['#0a0a0a','#ffffff','#555555','#f5f5f5']},
+  {name:'Terracotta',c:['#c0613f','#f5ede6','#e8a085','#3a1e14']}
+];
+
+// ============================================================
+// UTILS
+// ============================================================
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function tog(arr,v){var i=arr.indexOf(v);if(i>-1)arr.splice(i,1);else arr.push(v);}
+function save(){try{localStorage.setItem('vsb_sf2',JSON.stringify(state));}catch(e){}}
+function load(){try{var s=localStorage.getItem('vsb_sf2');if(s){var p=JSON.parse(s);Object.keys(p).forEach(function(k){state[k]=p[k];});}}catch(e){}}
+function killPickrs(){pickrs.forEach(function(p){try{p.destroyAndRemove();}catch(e){}});pickrs=[];}
+function renderHeader(){
+  var pills=document.getElementById('stepPills');
+  var h='';for(var i=0;i<TOTAL;i++){var c=i<cur?'done':(i===cur?'active':'');h+='<div class="step-pill '+c+'"></div>';}
+  pills.innerHTML=h;
+  document.getElementById('progress-bar').style.width=Math.round((cur/(TOTAL-1))*100)+'%';
+}
+function renderNav(first,last,skip){
+  var nav=document.getElementById('navButtons');
+  var back=first?'<span></span>':'<button class="btn btn-ghost" id="bBack">\u2190 Back</button>';
+  var nxt=last?'<button class="btn btn-primary" id="bNext">Submit Brief \u2713</button>':'<button class="btn btn-primary" id="bNext">Continue \u2192</button>';
+  var sk=skip?'<button class="btn btn-skip" id="bSkip">Skip</button>':'<span></span>';
+  nav.innerHTML=back+sk+nxt;
+  if(!first)document.getElementById('bBack').onclick=function(){killPickrs();cur--;go();};
+  document.getElementById('bNext').onclick=function(){save();if(last){done();return;}killPickrs();cur++;go();};
+  if(skip)document.getElementById('bSkip').onclick=function(){killPickrs();cur++;go();};
+}
+function go(){renderHeader();var card=document.getElementById('stepCard');card.style.animation='none';void card.offsetWidth;card.style.animation='';[step0,step1,step2,step3,step4,step5,step6][cur]();window.scrollTo({top:0,behavior:'smooth'});}
+
+// ============================================================
+// STEP 0: WELCOME
+// ============================================================
+function step0(){
+  document.getElementById('stepContent').innerHTML='<div style="text-align:center;padding:10px 0;">'+
+  '<div style="font-size:52px;margin-bottom:20px;">\u2726</div>'+
+  '<p class="step-eyebrow" style="text-align:center;">Welcome to your</p>'+
+  '<h1 class="step-title" style="text-align:center;font-size:42px;">Visual Onboarding Brief</h1>'+
+  '<p class="step-desc" style="text-align:center;max-width:50ch;margin:0 auto 32px;">Hello <strong style="color:var(--accent)">Sarah</strong> \ud83d\udc4b This short visual form helps us understand your taste, style, and goals so we can build a website that truly feels like <em>you</em>.</p>'+
+  '<div style="display:flex;flex-direction:column;gap:10px;max-width:370px;margin:0 auto;text-align:left;">'+
+  '<div style="display:flex;gap:14px;align-items:center;background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:13px 16px;"><span style="font-size:20px;">\ud83c\udfa8</span><div><div style="font-weight:600;font-size:13px;">Colour Palette</div><div style="font-size:12px;color:var(--text2);">Pick your palette with a colour wheel</div></div></div>'+
+  '<div style="display:flex;gap:14px;align-items:center;background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:13px 16px;"><span style="font-size:20px;">\ud83d\udd24</span><div><div style="font-weight:600;font-size:13px;">Fonts in English & Arabic</div><div style="font-size:12px;color:var(--text2);">Live bilingual preview</div></div></div>'+
+  '<div style="display:flex;gap:14px;align-items:center;background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:13px 16px;"><span style="font-size:20px;">\u2726</span><div><div style="font-weight:600;font-size:13px;">Style & Mood</div><div style="font-size:12px;color:var(--text2);">Visual mood cards for the vibe you want</div></div></div>'+
+  '<div style="display:flex;gap:14px;align-items:center;background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:13px 16px;"><span style="font-size:20px;">\ud83d\uddbc</span><div><div style="font-weight:600;font-size:13px;">Inspiration Gallery</div><div style="font-size:12px;color:var(--text2);">Label what you love or want to avoid</div></div></div>'+
+  '<div style="display:flex;gap:14px;align-items:center;background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:13px 16px;"><span style="font-size:20px;">\ud83d\udcac</span><div><div style="font-weight:600;font-size:13px;">Goals & Vision</div><div style="font-size:12px;color:var(--text2);">Tell us what success looks like for you</div></div></div>'+
+  '</div><p style="font-size:12px;color:var(--text3);margin-top:24px;font-family:var(--mono);">~ 5\u20138 minutes \u00b7 all fields optional unless marked</p></div>';
+  renderNav(true,false,false);
+}
+
+// ============================================================
+// STEP 1: COLOURS
+// ============================================================
+function step1(){
+  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 2 of '+TOTAL+'</div>';
+  h+='<p class="step-eyebrow">Colour Palette</p>';
+  h+='<h1 class="step-title">What colours feel like <em>you</em>?</h1>';
+  h+='<p class="step-desc">Click any colour swatch below to open the colour wheel picker. You can also type a hex code directly or choose a quick preset.</p>';
+  h+='<div class="palette-grid" id="palGrid">';
+  for(var i=0;i<state.colors.length;i++){
+    var c=state.colors[i];
+    h+='<div class="palette-slot">'+
+      '<div class="palette-slot-label">'+esc(c.role)+'</div>'+
+      '<div class="color-preview-row">'+
+        '<div class="color-swatch" id="sw'+i+'" style="background:'+esc(c.hex)+'" data-i="'+i+'"></div>'+
+        '<input type="text" class="color-hex-input" id="hi'+i+'" value="'+esc(c.hex)+'" placeholder="#ffffff" data-i="'+i+'">'+
+      '</div>'+
+      '<input type="text" id="cn'+i+'" value="'+esc(c.note)+'" placeholder="Purpose (optional)" data-i="'+i+'" class="cnote" style="font-size:12px;">'+
+    '</div>';
+  }
+  h+='</div>';
+  h+='<div class="section-divider"></div>';
+  h+='<span class="section-label">Saved palette combinations</span>';
+  h+='<div class="saved-palettes" id="savedPal"><span style="font-size:12px;color:var(--text3);">None saved yet</span></div>';
+  h+='<button class="save-palette-btn" id="savePal">+ Save current palette as a combination</button>';
+  h+='<div class="section-divider"></div>';
+  h+='<span class="section-label">Quick mood presets</span>';
+  h+='<div class="chip-row">';
+  PRESETS.forEach(function(p,pi){h+='<button class="chip" data-pi="'+pi+'">'+esc(p.name)+'</button>';});
+  h+='</div>';
+  document.getElementById('stepContent').innerHTML=h;
+  // init pickrs
+  for(var j=0;j<state.colors.length;j++){(function(idx){
+    var el=document.getElementById('sw'+idx);
+    if(!el)return;
+    var pk=Pickr.create({el:el,theme:'nano',default:state.colors[idx].hex,
+      swatches:['#2563eb','#0f172a','#f0f5ff','#60a5fa','#e05f7a','#5cb85c','#7c3aed','#1d4ed8','#0ea5e9','#6b8f71'],
+      components:{preview:true,opacity:false,hue:true,interaction:{hex:true,input:true,save:true}}});
+    pk.on('save',function(color){
+      var hex=color.toHEXA().toString();
+      state.colors[idx].hex=hex;
+      var hi=document.getElementById('hi'+idx);if(hi)hi.value=hex;
+      el.style.background=hex;
+      save();pk.hide();
+    });
+    pickrs[idx]=pk;
+  })(j);}
+  // hex input
+  document.querySelectorAll('.color-hex-input').forEach(function(inp){inp.addEventListener('input',function(){var i=parseInt(this.dataset.i);var v=this.value.trim();if(/^#[0-9a-fA-F]{6}$/.test(v)){state.colors[i].hex=v;document.getElementById('sw'+i).style.background=v;}});});
+  // notes
+  document.querySelectorAll('.cnote').forEach(function(inp){inp.addEventListener('input',function(){state.colors[parseInt(this.dataset.i)].note=this.value;save();});});
+  // save palette
+  document.getElementById('savePal').onclick=function(){state.savedPalettes.push(state.colors.map(function(c){return{role:c.role,hex:c.hex};}));refreshSaved();save();};
+  // presets
+  document.querySelectorAll('[data-pi]').forEach(function(btn){btn.onclick=function(){var p=PRESETS[parseInt(this.dataset.pi)];for(var k=0;k<4;k++){state.colors[k].hex=p.c[k];var sw=document.getElementById('sw'+k);if(sw)sw.style.background=p.c[k];var hi=document.getElementById('hi'+k);if(hi)hi.value=p.c[k];if(pickrs[k]){try{pickrs[k].setColor(p.c[k]);}catch(e){}}}save();};});
+  refreshSaved();
+  renderNav(false,false,true);
+}
+function refreshSaved(){
+  var w=document.getElementById('savedPal');if(!w)return;
+  if(!state.savedPalettes.length){w.innerHTML='<span style="font-size:12px;color:var(--text3);">None saved yet</span>';return;}
+  var h='';state.savedPalettes.forEach(function(pal,pi){h+='<div class="saved-palette">';pal.forEach(function(c){h+='<div class="swatch-mini" style="background:'+esc(c.hex)+'"></div>';});h+='<span class="label-mini">Palette '+(pi+1)+'</span></div>';});
+  w.innerHTML=h;
+}
+
+// ============================================================
+// STEP 2: FONTS
+// ============================================================
+function step2(){
+  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 3 of '+TOTAL+'</div>';
+  h+='<p class="step-eyebrow">Typography</p>';
+  h+='<h1 class="step-title">Choose your fonts</h1>';
+  h+='<p class="step-desc">Select one English font and one Arabic font. The live preview at the bottom updates as you choose.</p>';
+  h+='<span class="section-label">English fonts</span>';
+  h+='<div class="font-grid">';
+  EN_FONTS.forEach(function(f){var sel=state.enFont===f.id?' selected':'';var ff=ENF[f.id]||f.name;h+='<button class="font-card'+sel+'" data-ef="'+f.id+'"><span class="fc-name">'+esc(f.name)+'</span><span class="fc-sample" style="font-family:'+ff+'">'+esc(f.sample)+'</span><span class="fc-desc">'+esc(f.desc)+'</span><span class="fc-tag">'+esc(f.tag)+'</span></button>';});
+  h+='</div>';
+  h+='<div class="section-divider"></div>';
+  h+='<span class="section-label">Arabic fonts \u2014 <span style="font-size:10px;font-family:var(--mono);">\u0644\u063a\u0629 \u0639\u0631\u0628\u064a\u0629</span></span>';
+  h+='<div class="font-grid">';
+  AR_FONTS.forEach(function(f){var sel=state.arFont===f.id?' selected':'';var ff=ARF[f.id]||f.name;h+='<button class="font-card'+sel+'" data-af="'+f.id+'"><span class="fc-name">'+esc(f.name)+'</span><span class="fc-sample-ar" style="font-family:'+ff+'">'+esc(f.sample)+'</span><span class="fc-desc">'+esc(f.desc)+'</span><span class="fc-tag">'+esc(f.tag)+'</span></button>';});
+  h+='</div>';
+  h+='<div class="section-divider"></div>';
+  h+='<span class="section-label">Live bilingual preview</span>';
+  h+='<div id="fpBox" style="background:#f8faff;border:1px solid var(--border);border-radius:14px;padding:26px 30px;">'+fpHTML()+'</div>';
+  document.getElementById('stepContent').innerHTML=h;
+  document.querySelectorAll('[data-ef]').forEach(function(btn){btn.onclick=function(){state.enFont=this.dataset.ef;document.querySelectorAll('[data-ef]').forEach(function(b){b.classList.remove('selected');});this.classList.add('selected');var b=document.getElementById('fpBox');if(b)b.innerHTML=fpHTML();save();};});
+  document.querySelectorAll('[data-af]').forEach(function(btn){btn.onclick=function(){state.arFont=this.dataset.af;document.querySelectorAll('[data-af]').forEach(function(b){b.classList.remove('selected');});this.classList.add('selected');var b=document.getElementById('fpBox');if(b)b.innerHTML=fpHTML();save();};});
+  renderNav(false,false,true);
+}
+function fpHTML(){
+  var ef=state.enFont?(ENF[state.enFont]||'inherit'):"'Cormorant Garamond',serif";
+  var af=state.arFont?(ARF[state.arFont]||'inherit'):"'Cairo',sans-serif";
+  return '<div style="margin-bottom:16px;"><div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;">ENGLISH HEADING</div>'+
+  '<div style="font-family:'+ef+';font-size:28px;color:var(--text);line-height:1.2;">Your Brand. Your Story.</div>'+
+  '<div style="font-family:'+ef+';font-size:14px;color:var(--text2);margin-top:8px;line-height:1.6;">This is how your body text will look \u2014 readable, elegant, and aligned with your brand identity.</div></div>'+
+  '<div style="border-top:1px solid var(--border);padding-top:16px;margin-top:16px;">'+
+  '<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;">ARABIC \u2014 \u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0628\u0627\u0644\u0639\u0631\u0628\u064a\u0629</div>'+
+  '<div style="font-family:'+af+';font-size:28px;color:var(--text);line-height:1.4;text-align:right;direction:rtl;">\u0639\u0644\u0627\u0645\u062a\u0643 \u0627\u0644\u062a\u062c\u0627\u0631\u064a\u0629. \u0642\u0635\u062a\u0643 \u0627\u0644\u062e\u0627\u0635\u0629.</div>'+
+  '<div style="font-family:'+af+';font-size:14px;color:var(--text2);margin-top:8px;line-height:1.8;text-align:right;direction:rtl;">\u0647\u0643\u0630\u0627 \u0633\u064a\u0628\u062f\u0648 \u0646\u0635 \u0627\u0644\u0645\u062d\u062a\u0648\u0649 \u2014 \u0648\u0627\u0636\u062d\u060c \u0623\u0646\u064a\u0642\u060c \u0648\u0645\u062a\u0646\u0627\u0633\u0642 \u0645\u0639 \u0647\u0648\u064a\u062a\u0643 \u0627\u0644\u0628\u0635\u0631\u064a\u0629.</div></div>';
+}
+
+// ============================================================
+// STEP 3: STYLE
+// ============================================================
+function step3(){
+  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 4 of '+TOTAL+'</div>';
+  h+='<p class="step-eyebrow">Style & Mood</p>';
+  h+='<h1 class="step-title">What\'s the vibe?</h1>';
+  h+='<p class="step-desc">Select all styles that resonate \u2014 you can pick more than one.</p>';
+  h+='<div class="style-grid">';
+  STYLES.forEach(function(s){var sel=state.styles.indexOf(s.id)>-1?' selected':'';h+='<button class="style-card'+sel+'" data-st="'+s.id+'"><div class="sc-visual '+s.vis+'">'+s.icon+'</div><div class="sc-body"><div class="sc-title">'+esc(s.label)+'</div><div class="sc-desc">'+esc(s.desc)+'</div></div></button>';});
+  h+='</div>';
+  h+='<div class="section-divider"></div>';
+  h+='<span class="section-label">Formality vs personality</span>';
+  h+='<div class="slider-wrap"><input type="range" min="0" max="100" value="'+state.formalityLevel+'" id="fSlider"><div class="range-labels"><span>\u2726 Casual & Friendly</span><span>Luxurious & Formal \u2726</span></div></div>';
+  h+='<div class="section-divider"></div>';
+  h+='<label class="field-label">Websites or brands that inspire you <span class="field-optional">optional</span></label>';
+  h+='<input type="text" id="compUrls" value="'+esc(state.competitorUrls)+'" placeholder="e.g. https://site1.com, https://site2.com">';
+  document.getElementById('stepContent').innerHTML=h;
+  document.querySelectorAll('[data-st]').forEach(function(btn){btn.onclick=function(){tog(state.styles,this.dataset.st);this.classList.toggle('selected');save();};});
+  document.getElementById('fSlider').oninput=function(){state.formalityLevel=parseInt(this.value);save();};
+  document.getElementById('compUrls').oninput=function(){state.competitorUrls=this.value;save();};
+  renderNav(false,false,true);
+}
+
+// ============================================================
+// STEP 4: IMAGES
+// ============================================================
+function step4(){
+  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 5 of '+TOTAL+'</div>';
+  h+='<p class="step-eyebrow">Inspiration Gallery</p>';
+  h+='<h1 class="step-title">Tell us what you love</h1>';
+  h+='<p class="gallery-desc">Eight example website aesthetics across four style directions. Label each one using the buttons below the image. Add an optional comment for any image you feel strongly about.</p>';
+  var labels=[['love','\u2764 Love'],['inspire','\u2605 Inspire'],['meh','~ Meh'],['avoid','\u2717 Avoid']];
+  var groups={};IMGS.forEach(function(img){if(!groups[img.grp])groups[img.grp]=[];groups[img.grp].push(img);});
+  Object.keys(groups).forEach(function(grp){
+    h+='<span class="section-label">'+esc(grp)+'</span>';
+    h+='<div class="gallery-grid">';
+    groups[grp].forEach(function(img){
+      var lbl=(state.imgLabels[img.id]||{}).label||'';
+      var cmt=(state.imgLabels[img.id]||{}).comment||'';
+      var cc=lbl?' label-'+lbl:'';
+      var lines=img.lbl.split('\n');
+      var phH='<strong style="font-size:11px;opacity:0.75;">'+esc(lines[0])+'</strong>'+(lines[1]?'<br><span>'+esc(lines[1])+'</span>':'');
+      h+='<div class="img-card'+cc+'" id="ic'+img.id+'">'+
+        '<div class="img-placeholder '+img.ph+'">'+
+          '<div class="ph-num">'+esc(img.id)+'</div>'+
+          '<div class="ph-icon">'+img.icon+'</div>'+
+          '<div class="ph-label">'+phH+'<br><span style="font-size:9px;opacity:0.4;margin-top:4px;display:block;">\u2192 replace with your image</span></div>'+
+        '</div>'+
+        '<div class="img-card-body">'+
+          '<div class="img-card-site-label">'+esc(grp)+'</div>'+
+          '<div class="img-card-style-tag">'+esc(img.style)+'</div>'+
+          '<div class="img-label-row">';
+      labels.forEach(function(lb){h+='<button class="img-label-btn'+(lbl===lb[0]?' active-'+lb[0]:'')+'" data-id="'+img.id+'" data-lbl="'+lb[0]+'">'+lb[1]+'</button>';});
+      h+='</div>'+
+        '<textarea class="img-comment" data-id="'+img.id+'" placeholder="Optional comment\u2026">'+esc(cmt)+'</textarea>'+
+      '</div></div>';
+    });
+    h+='</div>';
+  });
+  document.getElementById('stepContent').innerHTML=h;
+  document.querySelectorAll('.img-label-btn').forEach(function(btn){
+    btn.onclick=function(){
+      var id=this.dataset.id,lbl=this.dataset.lbl;
+      if(!state.imgLabels[id])state.imgLabels[id]={};
+      state.imgLabels[id].label=(state.imgLabels[id].label===lbl?'':lbl);
+      var card=document.getElementById('ic'+id);
+      card.className='img-card'+(state.imgLabels[id].label?' label-'+state.imgLabels[id].label:'');
+      card.querySelectorAll('.img-label-btn').forEach(function(b){b.className='img-label-btn';if(state.imgLabels[id].label===b.dataset.lbl)b.classList.add('active-'+b.dataset.lbl);});
+      save();
+    };
+  });
+  document.querySelectorAll('.img-comment').forEach(function(ta){ta.oninput=function(){var id=this.dataset.id;if(!state.imgLabels[id])state.imgLabels[id]={};state.imgLabels[id].comment=this.value;save();};});
+  renderNav(false,false,true);
+}
+
+// ============================================================
+// STEP 5: GOALS
+// ============================================================
+function step5(){
+  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 6 of '+TOTAL+'</div>';
+  h+='<p class="step-eyebrow">Goals & Audience</p>';
+  h+='<h1 class="step-title">What does success look like?</h1>';
+  h+='<p class="step-desc">Help us understand who this website is for and what it needs to achieve.</p>';
+  h+='<label class="field-label">Primary goal of your website</label>';
+  h+='<div class="chip-row">';
+  ['Generate leads','Sell my services','Showcase my portfolio','Build an audience','Sell digital products','Establish authority','Grow my email list'].forEach(function(g){var sel=state.websiteGoal===g?' selected':'';h+='<button class="chip'+sel+'" data-gl="'+esc(g)+'">'+esc(g)+'</button>';});
+  h+='</div>';
+  h+='<label class="field-label">Describe your ideal website visitor <span class="field-optional">optional</span></label>';
+  h+='<textarea id="tAud" placeholder="e.g. Women 25\u201345, entrepreneurs looking for a personal brand coach\u2026">'+esc(state.targetAudience)+'</textarea>';
+  h+='<div class="section-divider"></div>';
+  h+='<label class="field-label">What makes you different? <span class="field-optional">optional</span></label>';
+  h+='<textarea id="uVal" placeholder="Your unique value, approach, or story\u2026">'+esc(state.uniqueValue)+'</textarea>';
+  document.getElementById('stepContent').innerHTML=h;
+  document.querySelectorAll('[data-gl]').forEach(function(btn){btn.onclick=function(){state.websiteGoal=this.dataset.gl;document.querySelectorAll('[data-gl]').forEach(function(b){b.classList.remove('selected');});this.classList.add('selected');save();};});
+  document.getElementById('tAud').oninput=function(){state.targetAudience=this.value;save();};
+  document.getElementById('uVal').oninput=function(){state.uniqueValue=this.value;save();};
+  renderNav(false,false,true);
+}
+
+// ============================================================
+// STEP 6: NOTES
+// ============================================================
+function step6(){
+  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 7 of '+TOTAL+'</div>';
+  h+='<p class="step-eyebrow">Almost there</p>';
+  h+='<h1 class="step-title">Final thoughts</h1>';
+  h+='<p class="step-desc">Anything else you\'d like us to know? This is your open canvas.</p>';
+  h+='<label class="field-label">Things you absolutely want to avoid <span class="field-optional">optional</span></label>';
+  h+='<textarea id="aN" style="min-height:80px;" placeholder="e.g. No stock photo faces, no neon colours, no busy layouts\u2026">'+esc(state.avoidNotes)+'</textarea>';
+  h+='<label class="field-label">Must-haves on your website <span class="field-optional">optional</span></label>';
+  h+='<textarea id="mH" style="min-height:80px;" placeholder="e.g. Arabic + English, video hero, booking system, testimonials\u2026">'+esc(state.musthaves)+'</textarea>';
+  h+='<label class="field-label">Open notes <span class="field-optional">optional</span></label>';
+  h+='<textarea id="fN" style="min-height:110px;" placeholder="Anything on your mind \u2014 we read every word \ud83d\udc9b">'+esc(state.finalNotes)+'</textarea>';
+  document.getElementById('stepContent').innerHTML=h;
+  document.getElementById('aN').oninput=function(){state.avoidNotes=this.value;save();};
+  document.getElementById('mH').oninput=function(){state.musthaves=this.value;save();};
+  document.getElementById('fN').oninput=function(){state.finalNotes=this.value;save();};
+  renderNav(false,true,false);
+}
+
+// ============================================================
+// THANK YOU
+// ============================================================
+function done(){
+  killPickrs();
+
+  var cList = state.colors.map(function(c){return c.role+": "+c.hex+(c.note?" ("+c.note+")":"");}).join(", ");
+  var iList = [];
+  Object.keys(state.imgLabels).forEach(function(k){
+     if(state.imgLabels[k].label || state.imgLabels[k].comment){
+       iList.push("Image "+k+": "+(state.imgLabels[k].label||"none")+(state.imgLabels[k].comment?" ("+state.imgLabels[k].comment+")":""));
+     }
+  });
+  
+  var cleanData = {
+    "1. Color Palette": cList,
+    "2. English Font": state.enFont || "None selected",
+    "3. Arabic Font": state.arFont || "None selected",
+    "4. Styles": state.styles.length ? state.styles.join(", ") : "None selected",
+    "5. Formality (0=Casual, 100=Formal)": state.formalityLevel,
+    "6. Image Feedback": iList.length ? iList.join("\n  ") : "No images labeled",
+    "7. Primary Goal": state.websiteGoal,
+    "8. Target Audience": state.targetAudience,
+    "9. Unique Value": state.uniqueValue,
+    "10. Competitor URLs": state.competitorUrls,
+    "11. Things to Avoid": state.avoidNotes,
+    "12. Must-Haves": state.musthaves,
+    "13. Final Notes": state.finalNotes
+  };
+
+  fetch('https://formspree.io/f/mbgjrjpw', {
+    method: 'POST',
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(cleanData)
+  }).catch(function(err){ console.error(err); });
+
+  document.getElementById('navButtons').innerHTML='';
+  var summary='';
+  if(state.websiteGoal)summary+='\ud83c\udfaf Goal: '+esc(state.websiteGoal)+'<br>';
+  if(state.enFont)summary+='\ud83d\udd24 English font: '+esc(state.enFont)+'<br>';
+  if(state.arFont)summary+='\u270f Arabic font: '+esc(state.arFont)+'<br>';
+  if(state.styles.length)summary+='\u2726 Style(s): '+state.styles.join(', ')+'<br>';
+  var loved=Object.keys(state.imgLabels).filter(function(k){return state.imgLabels[k].label==='love';});
+  if(loved.length)summary+='\u2764 Loved '+loved.length+' image(s)<br>';
+  var avoided=Object.keys(state.imgLabels).filter(function(k){return state.imgLabels[k].label==='avoid';});
+  if(avoided.length)summary+='\u2717 Avoided '+avoided.length+' image(s)<br>';
+  document.getElementById('stepCard').innerHTML=
+    '<div class="thankyou-wrap">'+
+    '<div class="ty-icon">\u2726</div>'+
+    '<h1 class="ty-title">Thank you, Sarah!</h1>'+
+    '<p class="ty-subtitle">Your visual brief has been submitted. We\'ll review every detail and reach out with next steps very soon.</p>'+
+    '<div class="reminder-cards">'+
+      '<div class="reminder-card highlight">'+
+        '<div class="rc-icon">\ud83c\udfe0</div>'+
+        '<div class="rc-content">'+
+          '<div class="rc-title">Next step \u2014 Home Page Form</div>'+
+          '<div class="rc-desc">Please fill out the <strong>Home Page Questionnaire</strong> so we can plan your hero section, calls to action, and the key sections your visitors will see first.</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="reminder-card">'+
+        '<div class="rc-icon">\ud83e\udd16</div>'+
+        '<div class="rc-content">'+
+          '<div class="rc-title">AI Agent \u2014 FAQ Document</div>'+
+          '<div class="rc-desc">We need a list of the <strong>Frequently Asked Questions</strong> you receive from your audience. This trains your website\'s AI assistant to answer visitors just like you would. A template has been shared with you \u2014 please fill it in and send it back.</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="reminder-card">'+
+        '<div class="rc-icon">\ud83d\udcf8</div>'+
+        '<div class="rc-content">'+
+          '<div class="rc-title">Photos & Brand Assets</div>'+
+          '<div class="rc-desc">Please gather your professional photos, logo files, and any brand materials and share them via the link we\'ll send you.</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    '<div style="margin-top:32px;padding:20px 24px;background:#f8faff;border:1px solid var(--border);border-radius:14px;max-width:480px;margin-left:auto;margin-right:auto;">'+
+      '<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:10px;">YOUR CHOICES AT A GLANCE</div>'+
+      '<div style="font-size:13px;color:var(--text2);line-height:1.9;">'+(summary||'<span style="color:var(--text3)">No selections recorded.</span>')+'</div>'+
+    '</div>'+
+    '<p style="margin-top:28px;font-size:13px;color:var(--text3);">Questions? Reach us at <strong style="color:var(--accent)">hello@mojtaba.studio</strong></p>'+
+    '</div>';
+  document.getElementById('progress-bar').style.width='100%';
+  document.getElementById('stepPills').querySelectorAll('.step-pill').forEach(function(p){p.className='step-pill done';});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// INIT
+load();go();
+</script>
+</body>
+</html>
