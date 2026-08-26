@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website discovery brief - Sarah Fadul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0F172A; --ink-soft:#334155;
+    --paper:#FFFFFF; --paper-soft:#F8FAFC;
+    --blue:#3B82F6; --blue-deep:#2563EB; --blue-dark:#1D4ED8; --blue-darkest:#1E3A8A;
+    --line:#E2E8F0; --line-dark:#475569;
+    --success:#2E9E76; --danger:#C25450;
+    --serif:'Fraunces',serif; --sans:'Inter',sans-serif; --mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--sans);background:var(--paper);color:var(--ink);}
+  .app{display:flex;min-height:100vh;}
+  .rail{width:280px;flex-shrink:0;background:var(--blue-darkest);color:var(--paper);padding:32px 24px;display:flex;flex-direction:column;gap:32px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+  .brand{display:flex;flex-direction:column;gap:4px;}
+  .brand .mark{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-0.01em;}
+  .brand .sub{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--blue);}
+  .eq{display:flex;gap:3px;align-items:flex-end;height:28px;}
+  .eq-bar{flex:1;background:var(--line-dark);border-radius:2px;transition:background .3s ease,height .3s ease;}
+  .eq-bar.done{background:var(--blue);}
+  .eq-bar.current{background:var(--blue-dark);}
+  @media(prefers-reduced-motion:no-preference){.eq-bar.current{animation:pulse 1.6s ease-in-out infinite;}}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+  .steps{display:flex;flex-direction:column;gap:2px;list-style:none;margin:0;padding:0;font-size:13px;}
+  .steps li{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--ink-soft);cursor:default;}
+  .steps li .dot{width:6px;height:6px;border-radius:50%;background:var(--line-dark);flex-shrink:0;}
+  .steps li.done{color:var(--paper);}
+  .steps li.done .dot{background:var(--blue);}
+  .steps li.active{background:rgba(255,255,255,0.07);color:var(--paper);font-weight:500;}
+  .steps li.active .dot{background:var(--blue-dark);}
+  .rail-foot{margin-top:auto;font-size:11px;color:var(--ink-soft);font-family:var(--mono);cursor:pointer;border-top:1px solid var(--line-dark);padding-top:16px;}
+  .rail-foot:hover{color:var(--blue);}
+  .panel{flex:1;display:flex;justify-content:center;padding:56px 32px 100px;}
+  .panel-inner{width:100%;max-width:640px;}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--blue-darkest);margin:0 0 10px;}
+  h1.step-title{font-family:var(--serif);font-size:32px;font-weight:600;line-height:1.15;margin:0 0 12px;letter-spacing:-0.01em;}
+  p.step-desc{font-size:15px;color:var(--ink-soft);line-height:1.6;margin:0 0 32px;max-width:52ch;}
+  label.field-label{display:block;font-size:13px;font-weight:600;margin:0 0 8px;color:var(--ink);}
+  input[type=text],textarea{width:100%;font-family:var(--sans);font-size:14px;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;margin-bottom:16px;transition:border-color .15s ease;}
+  textarea{resize:vertical;min-height:88px;line-height:1.5;}
+  input:focus,textarea:focus{outline:none;border-color:var(--blue-dark);box-shadow:0 0 0 3px rgba(29,78,216,0.15);}
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
+  .chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 16px;font-size:13px;cursor:pointer;color:var(--ink-soft);font-family:var(--sans);transition:all .15s ease;}
+  .chip:hover{border-color:var(--blue-dark);}
+  .chip.selected{background:var(--blue-deep);border-color:var(--blue-deep);color:#fff;}
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px;}
+  .choice-card{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:border-color .15s ease;text-align:left;font-family:var(--sans);}
+  .choice-card:hover{border-color:var(--blue-dark);}
+  .choice-card.selected{border-color:var(--blue-dark);background:#EFF6FF;box-shadow:0 0 0 1px var(--blue-dark);}
+  .choice-card .cc-title{font-weight:600;font-size:14px;color:var(--ink);}
+  .choice-card .cc-desc{font-size:12px;color:var(--ink-soft);line-height:1.5;}
+  .radio-row{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
+  .radio-opt{display:flex;align-items:flex-start;gap:10px;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;background:#fff;}
+  .radio-opt.selected{border-color:var(--blue-dark);background:#EFF6FF;}
+  .radio-opt input{margin-top:2px;accent-color:var(--blue-dark);width:auto;margin-bottom:0;flex-shrink:0;}
+  .radio-opt .ro-text b{display:block;font-size:14px;color:var(--ink);}
+  .goal-row{border:1.5px solid var(--line);border-radius:10px;padding:16px;margin-bottom:12px;background:#fff;position:relative;}
+  .goal-row input{margin-bottom:10px;}
+  .goal-row .remove-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--ink-soft);cursor:pointer;font-size:18px;}
+  .goal-row .remove-btn:hover{color:var(--danger);}
+  .link-row{display:flex;gap:8px;margin-bottom:12px;align-items:center;}
+  .link-row input{margin-bottom:0;flex:1;}
+  .link-remove-btn{background:none;border:1.5px solid var(--line);border-radius:8px;color:var(--ink-soft);cursor:pointer;font-size:16px;padding:6px 12px;line-height:1.4;white-space:nowrap;}
+  .link-remove-btn:hover{border-color:var(--danger);color:var(--danger);}
+  .add-btn{border:1.5px dashed var(--line);background:none;border-radius:10px;padding:12px;width:100%;color:var(--ink-soft);font-family:var(--sans);font-size:13px;cursor:pointer;margin-bottom:22px;display:block;text-align:center;}
+  .add-btn:hover{border-color:var(--blue-dark);color:var(--blue-darkest);}
+  .nav-buttons{display:flex;justify-content:space-between;align-items:center;margin-top:36px;max-width:640px;}
+  .btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:12px 26px;border-radius:10px;cursor:pointer;border:1.5px solid transparent;}
+  .btn-primary{background:var(--blue-deep);color:#fff;}
+  .btn-primary:hover{background:var(--blue-dark);}
+  .btn-ghost{background:none;border-color:var(--line);color:var(--ink-soft);}
+  .btn-ghost:hover{border-color:var(--ink-soft);color:var(--ink);}
+  .done-screen{text-align:center;padding:60px 20px;}
+  .done-screen .icon{width:64px;height:64px;border-radius:50%;background:var(--success);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 24px;}
+  .done-screen h1{font-family:var(--serif);font-size:32px;margin:0 0 16px;}
+  .done-screen p{font-size:15px;color:var(--ink-soft);line-height:1.6;max-width:48ch;margin:0 auto 12px;}
+  .reminder-box{background:#EFF6FF;border:1.5px solid var(--blue);border-radius:12px;padding:18px 22px;margin:24px auto 0;max-width:460px;text-align:left;}
+  .reminder-box strong{display:block;color:var(--blue-darkest);margin-bottom:6px;font-size:14px;}
+  .reminder-box p{color:var(--ink-soft);font-size:13px;margin:0;}
+  .admin-panel{position:fixed;inset:0;background:rgba(15,23,42,0.6);display:flex;align-items:center;justify-content:center;padding:32px;z-index:50;}
+  .admin-box{background:var(--paper);border-radius:16px;max-width:640px;width:100%;max-height:80vh;overflow-y:auto;padding:28px;}
+  .admin-box h2{font-family:var(--serif);margin-top:0;}
+  .admin-entry{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:13px;}
+  .admin-entry pre{white-space:pre-wrap;font-family:var(--mono);font-size:11.5px;margin:8px 0 0;color:var(--ink-soft);}
+  @media(max-width:860px){
+    .app{flex-direction:column;}
+    .rail{width:100%;height:auto;position:relative;flex-direction:row;align-items:center;padding:18px 20px;gap:16px;}
+    .rail .steps,.rail-foot{display:none;}
+    .brand{flex-shrink:0;}
+    .eq{flex:1;}
+    .panel{padding:32px 20px 80px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="rail">
+    <div class="brand">
+      <div class="mark">Discovery Brief</div>
+      <div class="sub" id="stepCounter">Step 1 of 6</div>
+    </div>
+    <div class="eq" id="eq"></div>
+    <ul class="steps" id="stepsNav"></ul>
+    <div class="rail-foot" id="adminLink">View submitted responses &#8599;</div>
+  </aside>
+  <main class="panel">
+    <div class="panel-inner">
+      <div id="content"></div>
+      <div class="nav-buttons" id="navButtons"></div>
+    </div>
+  </main>
+</div>
+
+<div class="admin-panel" id="adminPanel" style="display:none;">
+  <div class="admin-box">
+    <h2>Submitted responses</h2>
+    <div id="adminList"></div>
+    <button class="btn btn-ghost" id="closeAdmin" style="margin-top:12px;">Close</button>
+  </div>
+</div>
+
+<script>
+var state = {
+  clientName:'Sarah Fadul', businessDesc:'',
+  goals:[{title:'Showcase content-writing',desc:''}],
+  inspirationLinks:[''], avoidNotes:'',
+  homeSections:[], ctaText:'', homeMessage:'',
+  chatTypes:[], chatFaqs:'',
+  domain:'', hosting:null,
+  finalNotes:''
+};
+var currentStep=0;
+var HOME_SECTIONS=['Hero','Partners (previous clients)','Content creators / writers','Testimonials'];
+var STEPS=[
+  {id:'welcome',label:'Welcome'},
+  {id:'about',  label:'About & Goals'},
+  {id:'home',   label:'Home page'},
+  {id:'chat',   label:'Chat widget'},
+  {id:'tech',   label:'Technical'},
+  {id:'notes',  label:'Final notes'}
+];
+
+function esc(s){
+  if(!s)return'';
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function toggleArr(arr,val){var i=arr.indexOf(val);if(i>-1){arr.splice(i,1);}else{arr.push(val);}}
+
+function renderRail(){
+  var eq=document.getElementById('eq'),h='';
+  for(var i=0;i<STEPS.length;i++){
+    var c=i<currentStep?'done':(i===currentStep?'current':'');
+    h+='<div class="eq-bar '+c+'" style="height:'+(i<=currentStep?24:12)+'px"></div>';
+  }
+  eq.innerHTML=h;
+  var n=document.getElementById('stepsNav');h='';
+  for(var j=0;j<STEPS.length;j++){
+    var lc=j<currentStep?'done':(j===currentStep?'active':'');
+    h+='<li class="'+lc+'"><span class="dot"></span>'+STEPS[j].label+'</li>';
+  }
+  n.innerHTML=h;
+  document.getElementById('stepCounter').textContent='Step '+(currentStep+1)+' of '+STEPS.length;
+}
+
+function renderStep(){
+  var c=document.getElementById('content'),id=STEPS[currentStep].id,h='';
+
+  if(id==='welcome'){
+    h+='<p class="eyebrow">Welcome</p>';
+    h+='<h1 class="step-title">Welcome, <span style="color:var(--blue-deep);">Sarah Fadul</span>!</h1>';
+    h+='<p class="step-desc">This is a short form on the home page and the chat agent to help us get everything just right for you.</p>';
+  }
+
+  else if(id==='about'){
+    h+='<p class="eyebrow">Section 1</p>';
+    h+='<h1 class="step-title">About you and your goals</h1>';
+    h+='<label class="field-label">Describe your work in a sentence or two</label>';
+    h+='<textarea id="businessDesc" placeholder="e.g. I help brands grow through compelling content writing.">'+esc(state.businessDesc)+'</textarea>';
+    h+='<label class="field-label">Number one goal for this site</label>';
+    h+='<div id="goalsList">';
+    for(var gi=0;gi<state.goals.length;gi++){
+      var g=state.goals[gi];
+      h+='<div class="goal-row">';
+      if(gi>0){h+='<button type="button" class="remove-btn" data-action="removeGoal" data-val="'+gi+'">&times;</button>';}
+      h+='<label class="field-label">Goal '+(gi+1)+'</label>';
+      h+='<input type="text" data-action="goalTitle" data-val="'+gi+'" value="'+esc(g.title)+'" placeholder="e.g. Showcase content-writing">';
+      h+='<label class="field-label">Add some description to this goal</label>';
+      h+='<input type="text" data-action="goalDesc" data-val="'+gi+'" value="'+esc(g.desc)+'" placeholder="A bit more detail...">';
+      h+='</div>';
+    }
+    h+='</div>';
+    h+='<button type="button" class="add-btn" id="addGoal">+ Add another goal</button>';
+    h+='<label class="field-label">Sites to follow in design spirit</label>';
+    h+='<div id="linksList">';
+    for(var li=0;li<state.inspirationLinks.length;li++){
+      h+='<div class="link-row">';
+      h+='<input type="text" data-action="inspLink" data-val="'+li+'" value="'+esc(state.inspirationLinks[li])+'" placeholder="https://...">';
+      if(state.inspirationLinks.length>1){h+='<button type="button" class="link-remove-btn" data-action="removeLink" data-val="'+li+'">&times;</button>';}
+      h+='</div>';
+    }
+    h+='</div>';
+    h+='<button type="button" class="add-btn" id="addLink">+ Add another site</button>';
+    h+='<label class="field-label">Anything you specifically want to avoid?</label>';
+    h+='<textarea id="avoidNotes" placeholder="Style, tone, or features to steer clear of">'+esc(state.avoidNotes)+'</textarea>';
+  }
+
+  else if(id==='home'){
+    h+='<p class="eyebrow">Section 2</p>';
+    h+='<h1 class="step-title">Home page</h1>';
+    h+='<p class="step-desc">What should a first-time visitor see and do?</p>';
+    h+='<label class="field-label">Sections to include</label>';
+    h+='<div class="chip-row">';
+    for(var si=0;si<HOME_SECTIONS.length;si++){
+      var sec=HOME_SECTIONS[si];
+      var sc=state.homeSections.indexOf(sec)>-1?' selected':'';
+      h+='<button type="button" class="chip'+sc+'" data-action="toggleHomeSection" data-val="'+esc(sec)+'">'+esc(sec)+'</button>';
+    }
+    h+='</div>';
+    h+='<label class="field-label">What do you hope the visitors feels / thinks after scrolling through the homepage</label>';
+    h+='<textarea id="homeMessage" placeholder="Your ideal visitor\'s impression">'+esc(state.homeMessage)+'</textarea>';
+    h+='<label class="field-label">Main call-to-action</label>';
+    h+='<input type="text" id="ctaText" value="'+esc(state.ctaText)+'" placeholder="e.g. go the blogs page">';
+  }
+
+  else if(id==='chat'){
+    h+='<p class="eyebrow">Section 3</p>';
+    h+='<h1 class="step-title">Chat widget</h1>';
+    h+='<p class="step-desc">What should visitors experience when they click chat? Select all that apply.</p>';
+    h+='<div class="card-grid">';
+    var aiS=state.chatTypes.indexOf('ai')>-1?' selected':'';
+    h+='<button type="button" class="choice-card'+aiS+'" data-action="toggleChatType" data-val="ai">';
+    h+='<span class="cc-title">AI chatbot</span>';
+    h+='<span class="cc-desc">Answers FAQs about your services automatically</span>';
+    h+='</button>';
+    var ldS=state.chatTypes.indexOf('lead')>-1?' selected':'';
+    h+='<button type="button" class="choice-card'+ldS+'" data-action="toggleChatType" data-val="lead">';
+    h+='<span class="cc-title">Lead capture</span>';
+    h+='<span class="cc-desc">Collects name and email before anyone replies</span>';
+    h+='</button>';
+    var slS=state.chatTypes.indexOf('sales')>-1?' selected':'';
+    h+='<button type="button" class="choice-card'+slS+'" data-action="toggleChatType" data-val="sales">';
+    h+='<span class="cc-title">Act as sales rep</span>';
+    h+='<span class="cc-desc">Understands user needs and advises on what services are better suited for them, what they will get, and more</span>';
+    h+='</button>';
+    h+='</div>';
+    h+='<label class="field-label">Anything else you would like the chat agent to do?</label>';
+    h+='<textarea id="chatFaqs" placeholder="Any other features or behaviors...">'+esc(state.chatFaqs)+'</textarea>';
+  }
+
+  else if(id==='tech'){
+    h+='<p class="eyebrow">Section 4</p>';
+    h+='<h1 class="step-title">Technical</h1>';
+    h+='<p class="step-desc">A few quick logistics questions.</p>';
+    h+='<label class="field-label">Preferred domain names</label>';
+    h+='<input type="text" id="domain" value="'+esc(state.domain)+'" placeholder="e.g. sarahfadul.com">';
+    h+='<label class="field-label">Hosting</label>';
+    h+='<div class="radio-row">';
+    h+='<label class="radio-opt'+(state.hosting==='have'?' selected':'')+'"><input type="radio" name="hosting" value="have"'+(state.hosting==='have'?' checked':'')+'>  <span class="ro-text"><b>I already have hosting</b></span></label>';
+    h+='<label class="radio-opt'+(state.hosting==='need'?' selected':'')+'"><input type="radio" name="hosting" value="need"'+(state.hosting==='need'?' checked':'')+'>  <span class="ro-text"><b>I need help setting it up</b></span></label>';
+    h+='</div>';
+  }
+
+  else if(id==='notes'){
+    h+='<p class="eyebrow">Almost done</p>';
+    h+='<h1 class="step-title">Anything else?</h1>';
+    h+='<p class="step-desc">Last chance to tell us about must-haves, inspirations, or concerns.</p>';
+    h+='<textarea id="finalNotes" style="min-height:160px;" placeholder="Anything on your mind...">'+esc(state.finalNotes)+'</textarea>';
+  }
+
+  c.innerHTML=h;
+  attachStepEvents(id);
+  renderNav();
+  renderRail();
+  saveDraft();
+}
+
+function renderNav(){
+  var nav=document.getElementById('navButtons'),isF=currentStep===0,isL=currentStep===STEPS.length-1;
+  nav.innerHTML=(isF?'<span></span>':'<button class="btn btn-ghost" id="backBtn">Back</button>')+
+    '<button class="btn btn-primary" id="nextBtn">'+(isL?'Submit brief':'Continue')+'</button>';
+  if(!isF){document.getElementById('backBtn').onclick=function(){currentStep--;renderStep();window.scrollTo(0,0);};}
+  document.getElementById('nextBtn').onclick=function(){
+    if(isL){submitBrief();return;}
+    currentStep++;renderStep();window.scrollTo(0,0);
+  };
+}
+
+function attachStepEvents(id){
+  var c=document.getElementById('content');
+  var inps=c.querySelectorAll('input[type=text],textarea');
+  for(var i=0;i<inps.length;i++){
+    (function(inp){
+      inp.addEventListener('input',function(){
+        var k=inp.id;
+        if(k&&k in state){state[k]=inp.value;saveDraft();}
+      });
+    })(inps[i]);
+  }
+  var radios=c.querySelectorAll('input[type=radio]');
+  for(var r=0;r<radios.length;r++){
+    (function(radio){
+      radio.addEventListener('change',function(){state[radio.name]=radio.value;renderStep();});
+    })(radios[r]);
+  }
+  var nodes=c.querySelectorAll('[data-action]');
+  for(var a=0;a<nodes.length;a++){
+    (function(node){
+      var action=node.dataset.action;
+      if(action==='goalTitle'||action==='goalDesc'||action==='inspLink'){
+        node.addEventListener('input',function(){
+          var idx=parseInt(node.dataset.val);
+          if(action==='goalTitle'){state.goals[idx].title=node.value;}
+          else if(action==='goalDesc'){state.goals[idx].desc=node.value;}
+          else{state.inspirationLinks[idx]=node.value;}
+          saveDraft();
+        });
+      }else{
+        node.addEventListener('click',function(){
+          var val=node.dataset.val;
+          if(action==='toggleHomeSection'){toggleArr(state.homeSections,val);renderStep();}
+          else if(action==='toggleChatType'){toggleArr(state.chatTypes,val);renderStep();}
+          else if(action==='removeGoal'){state.goals.splice(parseInt(val),1);renderStep();}
+          else if(action==='removeLink'){state.inspirationLinks.splice(parseInt(val),1);renderStep();}
+        });
+      }
+    })(nodes[a]);
+  }
+  var agb=document.getElementById('addGoal');
+  if(agb){agb.addEventListener('click',function(){state.goals.push({title:'',desc:''});renderStep();});}
+  var alb=document.getElementById('addLink');
+  if(alb){alb.addEventListener('click',function(){state.inspirationLinks.push('');renderStep();});}
+}
+
+function saveDraft(){try{localStorage.setItem('draft_sarah_fadul',JSON.stringify(state));}catch(e){}}
+
+function loadDraft(){
+  try{
+    var s=localStorage.getItem('draft_sarah_fadul');
+    if(s){
+      var p=JSON.parse(s);
+      state=Object.assign(state,p);
+      if(!state.goals||!state.goals.length){state.goals=[{title:'Showcase content-writing',desc:''}];}
+      if(!state.inspirationLinks||!state.inspirationLinks.length){state.inspirationLinks=[''];}
+      if(!state.homeSections){state.homeSections=[];}
+      if(!state.chatTypes){state.chatTypes=[];}
+    }
+  }catch(e){}
+}
+
+function submitBrief(){
+  try{localStorage.setItem('sub_sarah_'+Date.now(),JSON.stringify(state));}catch(e){}
+
+  // Send data to Formspree
+  var btn = document.getElementById('nextBtn');
+  if(btn) { btn.textContent = 'Submitting...'; btn.disabled = true; }
+  
+  fetch('https://formspree.io/f/xrpgzzzp', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(state)
+  }).catch(function(err){ console.error(err); });
+
+  document.getElementById('content').innerHTML=
+    '<div class="done-screen">'+
+    '<div class="icon">&#10003;</div>'+
+    '<h1>Thank you, <span style="color:var(--blue-deep);">Sarah</span>!</h1>'+
+    '<p>Your brief has been submitted successfully. We\'ll review your answers and follow up with next steps soon.</p>'+
+    '<div class="reminder-box">'+
+    '<strong>Gentle reminder</strong>'+
+    '<ul style="margin:0;padding-left:18px;color:var(--ink-soft);font-size:13px;">'+
+    '<li style="margin-bottom:4px;">Fill out the <strong>visual onboarding form</strong></li>'+
+    '<li style="margin-bottom:4px;">Provide us with the most <strong>Frequently Asked Questions</strong> you receive from your audience</li>'+
+    '<li>Send us all the <strong>images, logos, partners, testimonials and creative-writers</strong> that you want to mention</li>'+
+    '</ul>'+
+    '</div>'+
+    '</div>';
+  document.getElementById('navButtons').innerHTML='';
+}
+
+function openAdmin(){
+  var panel=document.getElementById('adminPanel'),list=document.getElementById('adminList');
+  panel.style.display='flex';
+  var keys=[],out='';
+  try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('sub_sarah_')===0){keys.push(k);}}}catch(e){}
+  if(!keys.length){list.innerHTML='<p style="font-size:13px;color:var(--ink-soft);">No submissions yet.</p>';return;}
+  for(var j=0;j<keys.length;j++){
+    try{var d=JSON.parse(localStorage.getItem(keys[j]));out+='<div class="admin-entry"><b>'+(d.clientName||'Unnamed')+'</b><pre>'+JSON.stringify(d,null,2)+'</pre></div>';}catch(e){}
+  }
+  list.innerHTML=out||'<p style="font-size:13px;color:var(--ink-soft);">No submissions yet.</p>';
+}
+
+document.getElementById('adminLink').addEventListener('click',openAdmin);
+document.getElementById('closeAdmin').addEventListener('click',function(){document.getElementById('adminPanel').style.display='none';});
+
+loadDraft();
+renderStep();
+</script>
+</body>
+</html>
