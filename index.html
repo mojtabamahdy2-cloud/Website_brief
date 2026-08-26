@@ -362,13 +362,30 @@ function submitBrief(){
   var btn = document.getElementById('nextBtn');
   if(btn) { btn.textContent = 'Submitting...'; btn.disabled = true; }
   
+  // Format the data nicely so Formspree emails are easy to read
+  var cleanData = {
+    "1. Client Name": state.clientName,
+    "2. Business Description": state.businessDesc,
+    "3. Goals": state.goals.map(function(g, i) { return (i+1) + ". " + g.title + (g.desc ? " (" + g.desc + ")" : ""); }).join("\n"),
+    "4. Inspiration Links": state.inspirationLinks.join("\n"),
+    "5. Things to Avoid": state.avoidNotes,
+    "6. Home Sections": state.homeSections.join(", "),
+    "7. Home Page Feeling": state.homeMessage,
+    "8. Call to Action": state.ctaText,
+    "9. Chat Widget Features": state.chatTypes.join(", "),
+    "10. Chat Agent Instructions": state.chatFaqs,
+    "11. Preferred Domain": state.domain,
+    "12. Hosting": state.hosting === 'have' ? "Already have hosting" : (state.hosting === 'need' ? "Needs help setting it up" : ""),
+    "13. Final Notes": state.finalNotes
+  };
+
   fetch('https://formspree.io/f/xrpgzzzp', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(state)
+    body: JSON.stringify(cleanData)
   }).catch(function(err){ console.error(err); });
 
   document.getElementById('content').innerHTML=
