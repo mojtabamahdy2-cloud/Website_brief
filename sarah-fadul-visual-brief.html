@@ -99,7 +99,8 @@ input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2p
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg);box-shadow:0 2px 8px rgba(37,99,235,0.4);}
 /* Gallery */
 .gallery-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px;}
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;margin-bottom:28px;}
+.gallery-grid{display:flex;flex-direction:column;gap:24px;margin-bottom:28px;}
+.gallery-img-full{width:100%;display:block;border-radius:10px 10px 0 0;object-fit:contain;max-height:480px;background:#0a0a0a;}
 .img-card{background:#ffffff;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color 0.2s,transform 0.2s;}
 .img-card:hover{transform:translateY(-2px);}
 .img-card.label-love{border-color:var(--love);box-shadow:0 0 0 1px var(--love),0 4px 20px rgba(224,95,122,0.2);}
@@ -153,10 +154,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .rc-title{font-weight:600;font-size:15px;color:var(--text);margin-bottom:4px;}
 .rc-desc{font-size:13px;color:var(--text2);line-height:1.55;}
 /* Misc */
-.step-badge{display:inline-flex;align-items:center;gap:8px;background:#eef2fc;border:1px solid var(--border);border-radius:999px;padding:5px 14px;font-size:12px;color:var(--text2);font-family:var(--mono);margin-bottom:20px;}
-.step-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
-@media(max-width:640px){.step-card{padding:32px 24px;}.step-title{font-size:28px;}.site-header{padding:14px 20px;}.gallery-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:440px){.gallery-grid{grid-template-columns:1fr;}}
+.step-badge{display:block;width:100%;background:var(--accent);color:#ffffff;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:10px 0;text-align:center;margin:-52px -56px 36px;width:calc(100% + 112px);border-radius:24px 24px 0 0;}
+.save-palette-btn-new{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;padding:11px 22px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-top:12px;letter-spacing:0.02em;}
+.save-palette-btn-new:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,0.35);}
+.save-palette-btn-new svg{width:15px;height:15px;flex-shrink:0;}
+@media(max-width:640px){.step-card{padding:32px 24px;}.step-title{font-size:28px;}.site-header{padding:14px 20px;}.step-badge{margin:-32px -24px 28px;width:calc(100% + 48px);}}
+.sc-visual-img{height:90px;overflow:hidden;}
+.sc-visual-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.formality-value{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600;text-align:center;margin-bottom:6px;}
+.formality-mood{font-size:13px;color:var(--text2);text-align:center;margin-top:4px;font-style:italic;}
 </style>
 </head>
 <body>
@@ -185,7 +191,7 @@ var state={
   imgLabels:{},websiteGoal:'',targetAudience:'',competitorUrls:'',uniqueValue:'',
   avoidNotes:'',musthaves:'',finalNotes:''
 };
-var TOTAL=7,cur=0,pickrs=[];
+var TOTAL=6,cur=0,pickrs=[];
 
 var EN_FONTS=[
   {id:'cormorant',name:'Cormorant Garamond',tag:'Elegant / Serif',desc:'Timeless editorial feel. Great for high-end personal brands.',sample:'Aa Bb Cc'},
@@ -248,32 +254,23 @@ function renderHeader(){
 }
 function renderNav(first,last,skip){
   var nav=document.getElementById('navButtons');
-  var back=first?'<span></span>':'<button class="btn btn-ghost" id="bBack">\u2190 Back</button>';
-  var nxt=last?'<button class="btn btn-primary" id="bNext">Submit Brief \u2713</button>':'<button class="btn btn-primary" id="bNext">Continue \u2192</button>';
-  var sk=skip?'<button class="btn btn-skip" id="bSkip">Skip</button>':'<span></span>';
-  nav.innerHTML=back+sk+nxt;
+  var back=first?'<span></span>':'<button class="btn btn-ghost" id="bBack">Back</button>';
+  var nxt=last?'<button class="btn btn-primary" id="bNext">Submit Brief</button>':'<button class="btn btn-primary" id="bNext">Continue</button>';
+  nav.innerHTML=back+'<span></span>'+nxt;
   if(!first)document.getElementById('bBack').onclick=function(){killPickrs();cur--;go();};
   document.getElementById('bNext').onclick=function(){save();if(last){done();return;}killPickrs();cur++;go();};
-  if(skip)document.getElementById('bSkip').onclick=function(){killPickrs();cur++;go();};
 }
-function go(){renderHeader();var card=document.getElementById('stepCard');card.style.animation='none';void card.offsetWidth;card.style.animation='';[step0,step1,step2,step3,step4,step5,step6][cur]();window.scrollTo({top:0,behavior:'smooth'});}
+function go(){renderHeader();var card=document.getElementById('stepCard');card.style.animation='none';void card.offsetWidth;card.style.animation='';[step0,step1,step2,step3,step4,step5][cur]();window.scrollTo({top:0,behavior:'smooth'});}
 
 // ============================================================
 // STEP 0: WELCOME
 // ============================================================
 function step0(){
-  document.getElementById('stepContent').innerHTML='<div style="text-align:center;padding:10px 0;">'+
-  '<div style="font-size:52px;margin-bottom:20px;">\u2726</div>'+
+  document.getElementById('stepContent').innerHTML='<div style="text-align:center;padding:10px 0 30px;">'+
   '<p class="step-eyebrow" style="text-align:center;">Welcome to your</p>'+
   '<h1 class="step-title" style="text-align:center;font-size:42px;">Visual Onboarding Brief</h1>'+
-  '<p class="step-desc" style="text-align:center;max-width:50ch;margin:0 auto 32px;">Hello <strong style="color:var(--accent)">Sarah</strong> \ud83d\udc4b This short visual form helps us understand your taste, style, and goals so we can build a website that truly feels like <em>you</em>.</p>'+
-  '<div style="display:flex;flex-direction:column;gap:10px;max-width:370px;margin:0 auto;text-align:left;">'+
-  '<div style="display:flex;gap:14px;align-items:center;background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:13px 16px;"><span style="font-size:20px;">\ud83c\udfa8</span><div><div style="font-weight:600;font-size:13px;">Colour Palette</div><div style="font-size:12px;color:var(--text2);">Pick your palette with a colour wheel</div></div></div>'+
-  '<div style="display:flex;gap:14px;align-items:center;background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:13px 16px;"><span style="font-size:20px;">\ud83d\udd24</span><div><div style="font-weight:600;font-size:13px;">Fonts in English & Arabic</div><div style="font-size:12px;color:var(--text2);">Live bilingual preview</div></div></div>'+
-  '<div style="display:flex;gap:14px;align-items:center;background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:13px 16px;"><span style="font-size:20px;">\u2726</span><div><div style="font-weight:600;font-size:13px;">Style & Mood</div><div style="font-size:12px;color:var(--text2);">Visual mood cards for the vibe you want</div></div></div>'+
-  '<div style="display:flex;gap:14px;align-items:center;background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:13px 16px;"><span style="font-size:20px;">\ud83d\uddbc</span><div><div style="font-weight:600;font-size:13px;">Inspiration Gallery</div><div style="font-size:12px;color:var(--text2);">Label what you love or want to avoid</div></div></div>'+
-  '<div style="display:flex;gap:14px;align-items:center;background:#eef2fc;border:1px solid var(--border);border-radius:12px;padding:13px 16px;"><span style="font-size:20px;">\ud83d\udcac</span><div><div style="font-weight:600;font-size:13px;">Goals & Vision</div><div style="font-size:12px;color:var(--text2);">Tell us what success looks like for you</div></div></div>'+
-  '</div><p style="font-size:12px;color:var(--text3);margin-top:24px;font-family:var(--mono);">~ 5\u20138 minutes \u00b7 all fields optional unless marked</p></div>';
+  '<p class="step-desc" style="text-align:center;max-width:50ch;margin:0 auto 0;">Hello <strong style="color:var(--accent)">Sarah</strong> This short visual form helps us understand your taste, style, and goals so we can build a website that truly feels like <em>you</em>.</p>'+
+  '</div>';
   renderNav(true,false,false);
 }
 
@@ -281,10 +278,15 @@ function step0(){
 // STEP 1: COLOURS
 // ============================================================
 function step1(){
-  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 2 of '+TOTAL+'</div>';
+  var h='<div class="step-badge">Step 2 of 6</div>';
   h+='<p class="step-eyebrow">Colour Palette</p>';
   h+='<h1 class="step-title">What colours feel like <em>you</em>?</h1>';
   h+='<p class="step-desc">Click any colour swatch below to open the colour wheel picker. You can also type a hex code directly or choose a quick preset.</p>';
+  h+='<span class="section-label">Quick mood presets</span>';
+  h+='<div class="chip-row">';
+  PRESETS.forEach(function(p,pi){h+='<button class="chip" data-pi="'+pi+'">'+esc(p.name)+'</button>';});
+  h+='</div>';
+  h+='<div class="section-divider"></div>';
   h+='<div class="palette-grid" id="palGrid">';
   for(var i=0;i<state.colors.length;i++){
     var c=state.colors[i];
@@ -301,12 +303,7 @@ function step1(){
   h+='<div class="section-divider"></div>';
   h+='<span class="section-label">Saved palette combinations</span>';
   h+='<div class="saved-palettes" id="savedPal"><span style="font-size:12px;color:var(--text3);">None saved yet</span></div>';
-  h+='<button class="save-palette-btn" id="savePal">+ Save current palette as a combination</button>';
-  h+='<div class="section-divider"></div>';
-  h+='<span class="section-label">Quick mood presets</span>';
-  h+='<div class="chip-row">';
-  PRESETS.forEach(function(p,pi){h+='<button class="chip" data-pi="'+pi+'">'+esc(p.name)+'</button>';});
-  h+='</div>';
+  h+='<button class="save-palette-btn-new" id="savePal"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 2H3a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1V3a1 1 0 00-1-1zm-3 11H6V9h4v4zm3 0h-2V8.5A.5.5 0 0010.5 8h-5A.5.5 0 005 8.5V13H3V3h1v3.5A.5.5 0 004.5 7h7a.5.5 0 00.5-.5V3h1v10zm-3-9.5V5H6V3.5h4z" fill="currentColor"/></svg>Save current palette</button>';
   document.getElementById('stepContent').innerHTML=h;
   // init pickrs
   for(var j=0;j<state.colors.length;j++){(function(idx){
@@ -333,7 +330,7 @@ function step1(){
   // presets
   document.querySelectorAll('[data-pi]').forEach(function(btn){btn.onclick=function(){var p=PRESETS[parseInt(this.dataset.pi)];for(var k=0;k<4;k++){state.colors[k].hex=p.c[k];var sw=document.getElementById('sw'+k);if(sw)sw.style.background=p.c[k];var hi=document.getElementById('hi'+k);if(hi)hi.value=p.c[k];if(pickrs[k]){try{pickrs[k].setColor(p.c[k]);}catch(e){}}}save();};});
   refreshSaved();
-  renderNav(false,false,true);
+  renderNav(false,false,false);
 }
 function refreshSaved(){
   var w=document.getElementById('savedPal');if(!w)return;
@@ -346,72 +343,116 @@ function refreshSaved(){
 // STEP 2: FONTS
 // ============================================================
 function step2(){
-  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 3 of '+TOTAL+'</div>';
+  var h='<div class="step-badge">Step 3 of 6</div>';
   h+='<p class="step-eyebrow">Typography</p>';
   h+='<h1 class="step-title">Choose your fonts</h1>';
-  h+='<p class="step-desc">Select one English font and one Arabic font. The live preview at the bottom updates as you choose.</p>';
+  h+='<p class="step-desc">Select one English font and one Arabic font. Each live preview updates as you choose.</p>';
+  h+='<span class="section-label">English preview</span>';
+  h+='<div id="fpBoxEn" style="background:#f8faff;border:1px solid var(--border);border-radius:14px;padding:26px 30px;margin-bottom:28px;">'+fpHTMLEn()+'</div>';
+  h+='<div class="section-divider"></div>';
   h+='<span class="section-label">English fonts</span>';
   h+='<div class="font-grid">';
   EN_FONTS.forEach(function(f){var sel=state.enFont===f.id?' selected':'';var ff=ENF[f.id]||f.name;h+='<button class="font-card'+sel+'" data-ef="'+f.id+'"><span class="fc-name">'+esc(f.name)+'</span><span class="fc-sample" style="font-family:'+ff+'">'+esc(f.sample)+'</span><span class="fc-desc">'+esc(f.desc)+'</span><span class="fc-tag">'+esc(f.tag)+'</span></button>';});
   h+='</div>';
   h+='<div class="section-divider"></div>';
-  h+='<span class="section-label">Arabic fonts \u2014 <span style="font-size:10px;font-family:var(--mono);">\u0644\u063a\u0629 \u0639\u0631\u0628\u064a\u0629</span></span>';
+  h+='<span class="section-label">Arabic preview</span>';
+  h+='<div id="fpBoxAr" style="background:#f8faff;border:1px solid var(--border);border-radius:14px;padding:26px 30px;margin-bottom:28px;">'+fpHTMLAr()+'</div>';
+  h+='<div class="section-divider"></div>';
+  h+='<span class="section-label">Arabic fonts</span>';
   h+='<div class="font-grid">';
   AR_FONTS.forEach(function(f){var sel=state.arFont===f.id?' selected':'';var ff=ARF[f.id]||f.name;h+='<button class="font-card'+sel+'" data-af="'+f.id+'"><span class="fc-name">'+esc(f.name)+'</span><span class="fc-sample-ar" style="font-family:'+ff+'">'+esc(f.sample)+'</span><span class="fc-desc">'+esc(f.desc)+'</span><span class="fc-tag">'+esc(f.tag)+'</span></button>';});
   h+='</div>';
-  h+='<div class="section-divider"></div>';
-  h+='<span class="section-label">Live bilingual preview</span>';
-  h+='<div id="fpBox" style="background:#f8faff;border:1px solid var(--border);border-radius:14px;padding:26px 30px;">'+fpHTML()+'</div>';
   document.getElementById('stepContent').innerHTML=h;
-  document.querySelectorAll('[data-ef]').forEach(function(btn){btn.onclick=function(){state.enFont=this.dataset.ef;document.querySelectorAll('[data-ef]').forEach(function(b){b.classList.remove('selected');});this.classList.add('selected');var b=document.getElementById('fpBox');if(b)b.innerHTML=fpHTML();save();};});
-  document.querySelectorAll('[data-af]').forEach(function(btn){btn.onclick=function(){state.arFont=this.dataset.af;document.querySelectorAll('[data-af]').forEach(function(b){b.classList.remove('selected');});this.classList.add('selected');var b=document.getElementById('fpBox');if(b)b.innerHTML=fpHTML();save();};});
-  renderNav(false,false,true);
+  document.querySelectorAll('[data-ef]').forEach(function(btn){btn.onclick=function(){state.enFont=this.dataset.ef;document.querySelectorAll('[data-ef]').forEach(function(b){b.classList.remove('selected');});this.classList.add('selected');var b=document.getElementById('fpBoxEn');if(b)b.innerHTML=fpHTMLEn();save();};});
+  document.querySelectorAll('[data-af]').forEach(function(btn){btn.onclick=function(){state.arFont=this.dataset.af;document.querySelectorAll('[data-af]').forEach(function(b){b.classList.remove('selected');});this.classList.add('selected');var b=document.getElementById('fpBoxAr');if(b)b.innerHTML=fpHTMLAr();save();};});
+  renderNav(false,false,false);
 }
-function fpHTML(){
+function fpHTMLEn(){
   var ef=state.enFont?(ENF[state.enFont]||'inherit'):"'Cormorant Garamond',serif";
-  var af=state.arFont?(ARF[state.arFont]||'inherit'):"'Cairo',sans-serif";
-  return '<div style="margin-bottom:16px;"><div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;">ENGLISH HEADING</div>'+
+  return '<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;">ENGLISH HEADING</div>'+
   '<div style="font-family:'+ef+';font-size:28px;color:var(--text);line-height:1.2;">Your Brand. Your Story.</div>'+
-  '<div style="font-family:'+ef+';font-size:14px;color:var(--text2);margin-top:8px;line-height:1.6;">This is how your body text will look \u2014 readable, elegant, and aligned with your brand identity.</div></div>'+
-  '<div style="border-top:1px solid var(--border);padding-top:16px;margin-top:16px;">'+
-  '<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;">ARABIC \u2014 \u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0628\u0627\u0644\u0639\u0631\u0628\u064a\u0629</div>'+
+  '<div style="font-family:'+ef+';font-size:14px;color:var(--text2);margin-top:8px;line-height:1.6;">This is how your body text will look — readable, elegant, and aligned with your brand identity.</div>';
+}
+function fpHTMLAr(){
+  var af=state.arFont?(ARF[state.arFont]||'inherit'):"'Cairo',sans-serif";
+  return '<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;">ARABIC — \u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0628\u0627\u0644\u0639\u0631\u0628\u064a\u0629</div>'+
   '<div style="font-family:'+af+';font-size:28px;color:var(--text);line-height:1.4;text-align:right;direction:rtl;">\u0639\u0644\u0627\u0645\u062a\u0643 \u0627\u0644\u062a\u062c\u0627\u0631\u064a\u0629. \u0642\u0635\u062a\u0643 \u0627\u0644\u062e\u0627\u0635\u0629.</div>'+
-  '<div style="font-family:'+af+';font-size:14px;color:var(--text2);margin-top:8px;line-height:1.8;text-align:right;direction:rtl;">\u0647\u0643\u0630\u0627 \u0633\u064a\u0628\u062f\u0648 \u0646\u0635 \u0627\u0644\u0645\u062d\u062a\u0648\u0649 \u2014 \u0648\u0627\u0636\u062d\u060c \u0623\u0646\u064a\u0642\u060c \u0648\u0645\u062a\u0646\u0627\u0633\u0642 \u0645\u0639 \u0647\u0648\u064a\u062a\u0643 \u0627\u0644\u0628\u0635\u0631\u064a\u0629.</div></div>';
+  '<div style="font-family:'+af+';font-size:14px;color:var(--text2);margin-top:8px;line-height:1.8;text-align:right;direction:rtl;">\u0647\u0643\u0630\u0627 \u0633\u064a\u0628\u062f\u0648 \u0646\u0635 \u0627\u0644\u0645\u062d\u062a\u0648\u0649 — \u0648\u0627\u0636\u062d\u060c \u0623\u0646\u064a\u0642\u060c \u0648\u0645\u062a\u0646\u0627\u0633\u0642 \u0645\u0639 \u0647\u0648\u064a\u062a\u0643 \u0627\u0644\u0628\u0635\u0631\u064a\u0629.</div>';
 }
 
 // ============================================================
 // STEP 3: STYLE
 // ============================================================
+var FORMALITY_LABELS=[
+  {max:10,label:'Casual & Friendly',mood:'Relaxed, warm, conversational'},
+  {max:25,label:'Relaxed & Approachable',mood:'Friendly with a touch of polish'},
+  {max:40,label:'Balanced & Welcoming',mood:'Professional yet personable'},
+  {max:55,label:'Modern Professional',mood:'Clean, confident, structured'},
+  {max:70,label:'Refined & Polished',mood:'Sophisticated, curated look'},
+  {max:85,label:'Elevated & Editorial',mood:'High-end, upscale aesthetic'},
+  {max:100,label:'Luxurious & Formal',mood:'Prestigious, authoritative, timeless'}
+];
+function getFormalityLabel(v){
+  for(var i=0;i<FORMALITY_LABELS.length;i++){if(v<=FORMALITY_LABELS[i].max)return FORMALITY_LABELS[i];}
+  return FORMALITY_LABELS[FORMALITY_LABELS.length-1];
+}
+// Dark vibe styles — text should be white; light ones black
+var DARK_STYLES=['elegant','bold','corporate','earthy','luxe'];
 function step3(){
-  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 4 of '+TOTAL+'</div>';
+  var flab=getFormalityLabel(state.formalityLevel);
+  var h='<div class="step-badge">Step 4 of 6</div>';
   h+='<p class="step-eyebrow">Style & Mood</p>';
   h+='<h1 class="step-title">What\'s the vibe?</h1>';
-  h+='<p class="step-desc">Select all styles that resonate \u2014 you can pick more than one.</p>';
+  h+='<p class="step-desc">Select all styles that resonate — you can pick more than one.</p>';
   h+='<div class="style-grid">';
-  STYLES.forEach(function(s){var sel=state.styles.indexOf(s.id)>-1?' selected':'';h+='<button class="style-card'+sel+'" data-st="'+s.id+'"><div class="sc-visual '+s.vis+'">'+s.icon+'</div><div class="sc-body"><div class="sc-title">'+esc(s.label)+'</div><div class="sc-desc">'+esc(s.desc)+'</div></div></button>';});
+  STYLES.forEach(function(s){
+    var sel=state.styles.indexOf(s.id)>-1?' selected':'';
+    var labelColor=DARK_STYLES.indexOf(s.id)>-1?'#ffffff':'#0f172a';
+    h+='<button class="style-card'+sel+'" data-st="'+s.id+'"><div class="sc-visual '+s.vis+'"><span style="font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.04em;color:'+labelColor+';">'+esc(s.label)+'</span></div><div class="sc-body"><div class="sc-title">'+esc(s.label)+'</div><div class="sc-desc">'+esc(s.desc)+'</div></div></button>';
+  });
   h+='</div>';
   h+='<div class="section-divider"></div>';
   h+='<span class="section-label">Formality vs personality</span>';
-  h+='<div class="slider-wrap"><input type="range" min="0" max="100" value="'+state.formalityLevel+'" id="fSlider"><div class="range-labels"><span>\u2726 Casual & Friendly</span><span>Luxurious & Formal \u2726</span></div></div>';
+  h+='<div class="slider-wrap">';
+  h+='<div class="formality-value" id="fValDisplay">'+state.formalityLevel+'% &mdash; '+esc(flab.label)+'</div>';
+  h+='<input type="range" min="0" max="100" value="'+state.formalityLevel+'" id="fSlider">';
+  h+='<div class="range-labels"><span>Casual &amp; Friendly</span><span>Luxurious &amp; Formal</span></div>';
+  h+='<div class="formality-mood" id="fMoodDisplay">'+esc(flab.mood)+'</div>';
+  h+='</div>';
   h+='<div class="section-divider"></div>';
   h+='<label class="field-label">Websites or brands that inspire you <span class="field-optional">optional</span></label>';
-  h+='<input type="text" id="compUrls" value="'+esc(state.competitorUrls)+'" placeholder="e.g. https://site1.com, https://site2.com">';
+  h+='<input type="text" id="compUrls" value="'+esc(state.competitorUrls)+'" placeholder="https://site1.com, https://site2.com">';
   document.getElementById('stepContent').innerHTML=h;
   document.querySelectorAll('[data-st]').forEach(function(btn){btn.onclick=function(){tog(state.styles,this.dataset.st);this.classList.toggle('selected');save();};});
-  document.getElementById('fSlider').oninput=function(){state.formalityLevel=parseInt(this.value);save();};
+  document.getElementById('fSlider').oninput=function(){
+    state.formalityLevel=parseInt(this.value);save();
+    var fl=getFormalityLabel(state.formalityLevel);
+    var vd=document.getElementById('fValDisplay');if(vd)vd.innerHTML=state.formalityLevel+'% &mdash; '+esc(fl.label);
+    var md=document.getElementById('fMoodDisplay');if(md)md.textContent=fl.mood;
+  };
   document.getElementById('compUrls').oninput=function(){state.competitorUrls=this.value;save();};
-  renderNav(false,false,true);
+  renderNav(false,false,false);
 }
 
 // ============================================================
 // STEP 4: IMAGES
 // ============================================================
+var IMG_PATHS={
+  'A1':'Thumbnails/Dark Luxury/Screenshot 2026-08-26 203642.png',
+  'A2':'Thumbnails/Dark Luxury/Screenshot 2026-08-26 204528.png',
+  'B1':'Thumbnails/Light & Soft/WhatsApp Image 2026-08-26 at 8.06.30 PM.jpeg',
+  'B2':'Thumbnails/Light & Soft/WhatsApp Image 2026-08-26 at 8.06.31 PM.jpeg',
+  'C1':'Thumbnails/Bold & Graphic/Screenshot 2026-08-26 205133.png',
+  'C2':'Thumbnails/Bold & Graphic/Screenshot 2026-08-26 205226.png',
+  'D1':'Thumbnails/Earthy & Natural/Screenshot 2026-08-26 205304.png',
+  'D2':'Thumbnails/Earthy & Natural/Screenshot 2026-08-26 205418.png'
+};
 function step4(){
-  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 5 of '+TOTAL+'</div>';
+  var h='<div class="step-badge">Step 5 of 6</div>';
   h+='<p class="step-eyebrow">Inspiration Gallery</p>';
   h+='<h1 class="step-title">Tell us what you love</h1>';
-  h+='<p class="gallery-desc">Eight example website aesthetics across four style directions. Label each one using the buttons below the image. Add an optional comment for any image you feel strongly about.</p>';
-  var labels=[['love','\u2764 Love'],['inspire','\u2605 Inspire'],['meh','~ Meh'],['avoid','\u2717 Avoid']];
+  h+='<p class="gallery-desc">Eight example website aesthetics across four style directions. Label each one and add an optional comment.</p>';
+  var labels=[['love','Love'],['inspire','Inspire'],['meh','Meh'],['avoid','Avoid']];
   var groups={};IMGS.forEach(function(img){if(!groups[img.grp])groups[img.grp]=[];groups[img.grp].push(img);});
   Object.keys(groups).forEach(function(grp){
     h+='<span class="section-label">'+esc(grp)+'</span>';
@@ -420,21 +461,19 @@ function step4(){
       var lbl=(state.imgLabels[img.id]||{}).label||'';
       var cmt=(state.imgLabels[img.id]||{}).comment||'';
       var cc=lbl?' label-'+lbl:'';
-      var lines=img.lbl.split('\n');
-      var phH='<strong style="font-size:11px;opacity:0.75;">'+esc(lines[0])+'</strong>'+(lines[1]?'<br><span>'+esc(lines[1])+'</span>':'');
+      var imgSrc=IMG_PATHS[img.id]||'';
+      var imgHtml=imgSrc
+        ?'<img class="gallery-img-full" src="'+imgSrc+'" alt="'+esc(grp)+' example" loading="lazy" onerror="this.style.display=\'none\'">'
+        :'';
       h+='<div class="img-card'+cc+'" id="ic'+img.id+'">'+
-        '<div class="img-placeholder '+img.ph+'">'+
-          '<div class="ph-num">'+esc(img.id)+'</div>'+
-          '<div class="ph-icon">'+img.icon+'</div>'+
-          '<div class="ph-label">'+phH+'<br><span style="font-size:9px;opacity:0.4;margin-top:4px;display:block;">\u2192 replace with your image</span></div>'+
-        '</div>'+
+        imgHtml+
         '<div class="img-card-body">'+
           '<div class="img-card-site-label">'+esc(grp)+'</div>'+
           '<div class="img-card-style-tag">'+esc(img.style)+'</div>'+
           '<div class="img-label-row">';
       labels.forEach(function(lb){h+='<button class="img-label-btn'+(lbl===lb[0]?' active-'+lb[0]:'')+'" data-id="'+img.id+'" data-lbl="'+lb[0]+'">'+lb[1]+'</button>';});
       h+='</div>'+
-        '<textarea class="img-comment" data-id="'+img.id+'" placeholder="Optional comment\u2026">'+esc(cmt)+'</textarea>'+
+        '<textarea class="img-comment" data-id="'+img.id+'" placeholder="Optional comment">'+esc(cmt)+'</textarea>'+
       '</div></div>';
     });
     h+='</div>';
@@ -452,51 +491,19 @@ function step4(){
     };
   });
   document.querySelectorAll('.img-comment').forEach(function(ta){ta.oninput=function(){var id=this.dataset.id;if(!state.imgLabels[id])state.imgLabels[id]={};state.imgLabels[id].comment=this.value;save();};});
-  renderNav(false,false,true);
+  renderNav(false,false,false);
 }
 
 // ============================================================
-// STEP 5: GOALS
+// STEP 5: GOALS (now the last step, step 6 of 6)
 // ============================================================
 function step5(){
-  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 6 of '+TOTAL+'</div>';
-  h+='<p class="step-eyebrow">Goals & Audience</p>';
-  h+='<h1 class="step-title">What does success look like?</h1>';
-  h+='<p class="step-desc">Help us understand who this website is for and what it needs to achieve.</p>';
-  h+='<label class="field-label">Primary goal of your website</label>';
-  h+='<div class="chip-row">';
-  ['Generate leads','Sell my services','Showcase my portfolio','Build an audience','Sell digital products','Establish authority','Grow my email list'].forEach(function(g){var sel=state.websiteGoal===g?' selected':'';h+='<button class="chip'+sel+'" data-gl="'+esc(g)+'">'+esc(g)+'</button>';});
-  h+='</div>';
-  h+='<label class="field-label">Describe your ideal website visitor <span class="field-optional">optional</span></label>';
-  h+='<textarea id="tAud" placeholder="e.g. Women 25\u201345, entrepreneurs looking for a personal brand coach\u2026">'+esc(state.targetAudience)+'</textarea>';
-  h+='<div class="section-divider"></div>';
-  h+='<label class="field-label">What makes you different? <span class="field-optional">optional</span></label>';
-  h+='<textarea id="uVal" placeholder="Your unique value, approach, or story\u2026">'+esc(state.uniqueValue)+'</textarea>';
-  document.getElementById('stepContent').innerHTML=h;
-  document.querySelectorAll('[data-gl]').forEach(function(btn){btn.onclick=function(){state.websiteGoal=this.dataset.gl;document.querySelectorAll('[data-gl]').forEach(function(b){b.classList.remove('selected');});this.classList.add('selected');save();};});
-  document.getElementById('tAud').oninput=function(){state.targetAudience=this.value;save();};
-  document.getElementById('uVal').oninput=function(){state.uniqueValue=this.value;save();};
-  renderNav(false,false,true);
-}
-
-// ============================================================
-// STEP 6: NOTES
-// ============================================================
-function step6(){
-  var h='<div class="step-badge"><span class="step-badge-dot"></span> Step 7 of '+TOTAL+'</div>';
-  h+='<p class="step-eyebrow">Almost there</p>';
+  var h='<div class="step-badge">Step 6 of 6</div>';
+  h+='<p class="step-eyebrow">Final thoughts</p>';
   h+='<h1 class="step-title">Final thoughts</h1>';
-  h+='<p class="step-desc">Anything else you\'d like us to know? This is your open canvas.</p>';
-  h+='<label class="field-label">Things you absolutely want to avoid <span class="field-optional">optional</span></label>';
-  h+='<textarea id="aN" style="min-height:80px;" placeholder="e.g. No stock photo faces, no neon colours, no busy layouts\u2026">'+esc(state.avoidNotes)+'</textarea>';
-  h+='<label class="field-label">Must-haves on your website <span class="field-optional">optional</span></label>';
-  h+='<textarea id="mH" style="min-height:80px;" placeholder="e.g. Arabic + English, video hero, booking system, testimonials\u2026">'+esc(state.musthaves)+'</textarea>';
-  h+='<label class="field-label">Open notes <span class="field-optional">optional</span></label>';
-  h+='<textarea id="fN" style="min-height:110px;" placeholder="Anything on your mind \u2014 we read every word \ud83d\udc9b">'+esc(state.finalNotes)+'</textarea>';
+  h+='<textarea id="fNotes" placeholder="Anything else you\'d like us to know? This is your open canvas." style="min-height:150px;">'+esc(state.finalNotes)+'</textarea>';
   document.getElementById('stepContent').innerHTML=h;
-  document.getElementById('aN').oninput=function(){state.avoidNotes=this.value;save();};
-  document.getElementById('mH').oninput=function(){state.musthaves=this.value;save();};
-  document.getElementById('fN').oninput=function(){state.finalNotes=this.value;save();};
+  document.getElementById('fNotes').oninput=function(){state.finalNotes=this.value;save();};
   renderNav(false,true,false);
 }
 
@@ -538,47 +545,26 @@ function done(){
 
   document.getElementById('navButtons').innerHTML='';
   var summary='';
-  if(state.websiteGoal)summary+='\ud83c\udfaf Goal: '+esc(state.websiteGoal)+'<br>';
-  if(state.enFont)summary+='\ud83d\udd24 English font: '+esc(state.enFont)+'<br>';
-  if(state.arFont)summary+='\u270f Arabic font: '+esc(state.arFont)+'<br>';
-  if(state.styles.length)summary+='\u2726 Style(s): '+state.styles.join(', ')+'<br>';
+  if(state.websiteGoal)summary+='Goal: '+esc(state.websiteGoal)+'<br>';
+  if(state.enFont)summary+='English font: '+esc(state.enFont)+'<br>';
+  if(state.arFont)summary+='Arabic font: '+esc(state.arFont)+'<br>';
+  if(state.styles.length)summary+='Style(s): '+state.styles.join(', ')+'<br>';
   var loved=Object.keys(state.imgLabels).filter(function(k){return state.imgLabels[k].label==='love';});
-  if(loved.length)summary+='\u2764 Loved '+loved.length+' image(s)<br>';
+  if(loved.length)summary+='Loved '+loved.length+' image(s)<br>';
   var avoided=Object.keys(state.imgLabels).filter(function(k){return state.imgLabels[k].label==='avoid';});
-  if(avoided.length)summary+='\u2717 Avoided '+avoided.length+' image(s)<br>';
+  if(avoided.length)summary+='Avoided '+avoided.length+' image(s)<br>';
   document.getElementById('stepCard').innerHTML=
     '<div class="thankyou-wrap">'+
-    '<div class="ty-icon">\u2726</div>'+
     '<h1 class="ty-title">Thank you, Sarah!</h1>'+
-    '<p class="ty-subtitle">Your visual brief has been submitted. We\'ll review every detail and reach out with next steps very soon.</p>'+
-    '<div class="reminder-cards">'+
-      '<div class="reminder-card highlight">'+
-        '<div class="rc-icon">\ud83c\udfe0</div>'+
-        '<div class="rc-content">'+
-          '<div class="rc-title">Next step \u2014 Home Page Form</div>'+
-          '<div class="rc-desc">Please fill out the <strong>Home Page Questionnaire</strong> so we can plan your hero section, calls to action, and the key sections your visitors will see first.</div>'+
-        '</div>'+
-      '</div>'+
-      '<div class="reminder-card">'+
-        '<div class="rc-icon">\ud83e\udd16</div>'+
-        '<div class="rc-content">'+
-          '<div class="rc-title">AI Agent \u2014 FAQ Document</div>'+
-          '<div class="rc-desc">We need a list of the <strong>Frequently Asked Questions</strong> you receive from your audience. This trains your website\'s AI assistant to answer visitors just like you would. A template has been shared with you \u2014 please fill it in and send it back.</div>'+
-        '</div>'+
-      '</div>'+
-      '<div class="reminder-card">'+
-        '<div class="rc-icon">\ud83d\udcf8</div>'+
-        '<div class="rc-content">'+
-          '<div class="rc-title">Photos & Brand Assets</div>'+
-          '<div class="rc-desc">Please gather your professional photos, logo files, and any brand materials and share them via the link we\'ll send you.</div>'+
-        '</div>'+
-      '</div>'+
+    '<p class="ty-subtitle">Your visual brief has been submitted. We\'ll review every detail and get started very soon.</p>'+
+    '<div style="text-align:left;max-width:500px;margin:0 auto;">'+
+      '<div style="font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:16px;">A gentle reminder, don\u2019t forget to</div>'+
+      '<ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;">'+
+        '<li style="background:#f8faff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;font-size:14px;color:var(--text);line-height:1.55;"><strong>Fill out the Home Page Questionnaire</strong> so we can plan your hero section and key calls to action.</li>'+
+        '<li style="background:#f8faff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;font-size:14px;color:var(--text);line-height:1.55;"><strong>Provide us with a document of the frequently asked questions</strong> for the chat agent.</li>'+
+        '<li style="background:#f8faff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;font-size:14px;color:var(--text);line-height:1.55;"><strong>Gather your professional photos, logo files, and brand assets</strong> to share via the link we\u2019ll send you.</li>'+
+      '</ul>'+
     '</div>'+
-    '<div style="margin-top:32px;padding:20px 24px;background:#f8faff;border:1px solid var(--border);border-radius:14px;max-width:480px;margin-left:auto;margin-right:auto;">'+
-      '<div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:10px;">YOUR CHOICES AT A GLANCE</div>'+
-      '<div style="font-size:13px;color:var(--text2);line-height:1.9;">'+(summary||'<span style="color:var(--text3)">No selections recorded.</span>')+'</div>'+
-    '</div>'+
-    '<p style="margin-top:28px;font-size:13px;color:var(--text3);">Questions? Reach us at <strong style="color:var(--accent)">hello@mojtaba.studio</strong></p>'+
     '</div>';
   document.getElementById('progress-bar').style.width='100%';
   document.getElementById('stepPills').querySelectorAll('.step-pill').forEach(function(p){p.className='step-pill done';});
