@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Agent FAQ Document — Sarah Fadul</title>
+<title>AI Agent FAQ Document</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -68,7 +68,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3);}
       <div class="faq-q-label">Question visitors ask</div>
       <div class="faq-q-example">&ldquo;Who are you and what do you do?&rdquo;</div>
       <label class="faq-input-label">Your answer</label>
-      <textarea rows="3" placeholder="e.g. I’m Sarah Fadul, a content strategist who helps personal brands build a powerful online presence through compelling storytelling..."></textarea>
+      <textarea rows="3" placeholder="e.g. I’m a content strategist who helps personal brands build a powerful online presence through compelling storytelling..."></textarea>
     </div>
 
     <div class="faq-card" data-faq>
@@ -167,7 +167,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3);}
       <div class="faq-q-label">Question visitors ask</div>
       <div class="faq-q-example">&ldquo;How can I contact you?&rdquo;</div>
       <label class="faq-input-label">Your answer</label>
-      <textarea rows="2" placeholder="e.g. You can book a call here [link], or email me at hello@sarahfadul.com. I respond within 24 hours."></textarea>
+      <textarea rows="2" placeholder="e.g. You can book a call here [link], or email me at hello@example.com. I respond within 24 hours."></textarea>
     </div>
 
     <div class="section-head"><div class="section-num">6</div><div class="section-title">Your Own Frequently Asked Questions</div></div>
@@ -206,7 +206,7 @@ document.getElementById('addFaqBtn').onclick=function(){
   div.addEventListener('input',updateProgress);updateProgress();
 };
 function buildText(){
-  var out='SARAH FADUL — AI AGENT FAQ DOCUMENT
+  var out='AI AGENT FAQ DOCUMENT
 '+'='.repeat(50)+'
 
 ';
@@ -222,7 +222,7 @@ A: '+a.value.trim()+'
 }
 document.getElementById('exportBtn').onclick=function(){
   var blob=new Blob([buildText()],{type:'text/plain;charset=utf-8'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sarah-fadul-faq.txt';a.click();
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='faq.txt';a.click();
 };
 document.getElementById('copyBtn').onclick=function(){
   navigator.clipboard.writeText(buildText()).then(function(){

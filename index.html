@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Website discovery brief - Sarah Fadul</title>
+<title>Website discovery brief</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -129,7 +129,7 @@
 
 <script>
 var state = {
-  clientName:'Sarah Fadul', businessDesc:'',
+  clientName:'', businessDesc:'',
   goals:[{title:'Showcase content-writing',desc:''}],
   inspirationLinks:[''], avoidNotes:'',
   homeSections:[], ctaText:'', homeMessage:'',
@@ -175,7 +175,7 @@ function renderStep(){
 
   if(id==='welcome'){
     h+='<p class="eyebrow">Welcome</p>';
-    h+='<h1 class="step-title">Welcome, <span style="color:var(--blue-deep);">Sarah Fadul</span>!</h1>';
+    h+='<h1 class="step-title">Welcome!</h1>';
     h+='<p class="step-desc">This is a short form on the home page and the chat agent to help us get everything just right for you.</p>';
   }
 
@@ -391,16 +391,8 @@ function submitBrief(){
   document.getElementById('content').innerHTML=
     '<div class="done-screen">'+
     '<div class="icon">&#10003;</div>'+
-    '<h1>Thank you, <span style="color:var(--blue-deep);">Sarah</span>!</h1>'+
+    '<h1>Thank you!</h1>'+
     '<p>Your brief has been submitted successfully. We\'ll review your answers and follow up with next steps soon.</p>'+
-    '<div class="reminder-box">'+
-    '<strong>Gentle reminder</strong>'+
-    '<ul style="margin:0;padding-left:18px;color:var(--ink-soft);font-size:13px;">'+
-    '<li style="margin-bottom:4px;">Fill out the <strong>visual onboarding form</strong></li>'+
-    '<li style="margin-bottom:4px;">Provide us with the most <strong>Frequently Asked Questions</strong> you receive from your audience</li>'+
-    '<li>Send us all the <strong>images, logos, partners, testimonials and creative-writers</strong> that you want to mention</li>'+
-    '</ul>'+
-    '</div>'+
     '</div>';
   document.getElementById('navButtons').innerHTML='';
 }
